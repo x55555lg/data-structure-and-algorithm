@@ -4,6 +4,8 @@ import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 /**
+ * 基于链表实现简单的包结构
+ *
  * @author Xulg
  * Created in 2020-09-16 17:42
  */

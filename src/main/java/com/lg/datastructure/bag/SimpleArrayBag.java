@@ -56,16 +56,16 @@ class SimpleArrayBag<Item> implements SimpleBag<Item> {
 
     private class BagIterator implements Iterator<Item> {
 
-        private int cursor;
+        private int cursor = size - 1;
 
         @Override
         public boolean hasNext() {
-            return cursor < size;
+            return cursor >= 0;
         }
 
         @Override
         public Item next() {
-            return table[cursor++];
+            return table[cursor--];
         }
     }
 
