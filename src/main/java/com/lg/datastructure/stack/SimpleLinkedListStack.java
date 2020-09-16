@@ -9,11 +9,12 @@ import java.util.Iterator;
  * @author Xulg
  * Created in 2020-09-16 11:59
  */
-public class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
+class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
     /**
      * 头节点，也就是栈定，保存的是最近插入的数据
      */
     private Node first;
+
     private int size;
 
     @Override
@@ -52,7 +53,7 @@ public class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
     @Nonnull
     @Override
     public Iterator<Item> iterator() {
-        return new SimpleStackIterator(first);
+        return new SimpleStackIterator();
     }
 
     /**
@@ -65,11 +66,7 @@ public class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
 
     private class SimpleStackIterator implements Iterator<Item> {
 
-        private Node first;
-
-        SimpleStackIterator(Node first) {
-            this.first = first;
-        }
+        private Node current = first;
 
         @Override
         public boolean hasNext() {
@@ -78,11 +75,12 @@ public class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
 
         @Override
         public Item next() {
-            Node oldFirst = first;
-            this.first = oldFirst.next;
+            Node old = current;
+            this.current = old.next;
             //noinspection unchecked
-            return (Item) oldFirst.item;
+            return (Item) old.item;
         }
+
     }
 
     public static void main(String[] args) {

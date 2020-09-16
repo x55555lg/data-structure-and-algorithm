@@ -1,36 +1,36 @@
-package com.lg.datastructure.stack;
+package com.lg.datastructure.queue;
 
 /**
- * 自己实现的简单栈
+ * 简单的队列实现
  *
  * @author Xulg
- * Created in 2020-09-16 12:34
+ * Created in 2020-09-16 13:41
  */
-interface SimpleStack<Item> extends Iterable<Item> {
+interface SimpleQueue<Item> extends Iterable<Item> {
 
     /**
-     * 入栈
+     * 入队
      *
      * @param item the item
      */
-    void push(Item item);
+    void enqueue(Item item);
 
     /**
-     * 出栈
+     * 出队
      *
      * @return the item
      */
-    Item pop();
+    Item dequeue();
 
     /**
-     * 栈是否空的
+     * 队列是否空的
      *
      * @return is the stack empty
      */
     boolean isEmpty();
 
     /**
-     * 栈的大小
+     * 队列的大小
      *
      * @return the size of the stack
      */
