@@ -11,7 +11,7 @@ import java.util.Iterator;
  */
 class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
     /**
-     * 头节点，也就是栈定，保存的是最近插入的数据
+     * 头节点，也就是栈顶，保存的是最近插入的数据
      */
     private Node first;
 
@@ -19,6 +19,7 @@ class SimpleLinkedListStack<Item> implements SimpleStack<Item> {
 
     @Override
     public void push(Item item) {
+        // 将新插入的节点变为头节点，将原来的头节点拼接到新头节点上
         // 采用头插法，在first节点前面插入
         Node oldFirst = this.first;
         this.first = new Node();

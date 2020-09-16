@@ -11,8 +11,8 @@ class SimpleLinkedList<Item> {
     /**
      * 链表节点
      */
-    private static class Node<Item> {
+    private class Node {
         private Item item;
-        private Node<Item> next;
+        private Node next;
     }
 }

@@ -81,14 +81,17 @@ class SimpleArrayStack<T> implements SimpleStack<T> {
      * 迭代器
      */
     private class SimpleStackIterator implements Iterator<T> {
+
+        private int cursor = size - 1;
+
         @Override
         public boolean hasNext() {
-            return size > 0;
+            return cursor >= 0;
         }
 
         @Override
         public T next() {
-            return array[--size];
+            return array[cursor--];
         }
     }
 
@@ -100,6 +103,10 @@ class SimpleArrayStack<T> implements SimpleStack<T> {
         stack.push("d");
         stack.push("e");
         stack.push("f");
+
+        for (String s : stack) {
+            System.out.println(s);
+        }
 
         System.out.println(stack.pop());
         System.out.println(stack.pop());
