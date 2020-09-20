@@ -61,11 +61,6 @@ public class InsertSort {
     }
 
     private static void swap(int[] array, int a, int b) {
-        // 使用异或交换两个数
-        //array[a] = array[a] ^ array[b];
-        //array[b] = array[a] ^ array[b];
-        //array[b] = array[a] ^ array[b];
-
         int temp = array[a];
         array[a] = array[b];
         array[b] = temp;
