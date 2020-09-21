@@ -38,7 +38,7 @@ public class BitCalc {
      *      3.如何把一个int类型的数，提取出最右侧的1来，即二进制中只保留最右边的1,其余都变0。
      *          这个技巧比较常用
      *              实现效果：int a = 0011,0101,0000 -> 0000,0001,0000
-     *              int result = N & (~N + 1);
+     *              int result = N & ((~N) + 1);
      *          见test3();
      *
      */
@@ -94,8 +94,10 @@ public class BitCalc {
     public static void test3() {
         int a = Integer.parseInt("001101010000", 2);
         System.out.println("before: " + a);
-        int r = a & (~a + 1);
+        int r = a & ((~a) + 1);
         System.out.println("after: " + r);
         System.out.println(Integer.toBinaryString(r));
     }
+
+    /* ************************************************************************************************************** */
 }
