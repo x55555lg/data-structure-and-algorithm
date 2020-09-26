@@ -16,6 +16,8 @@ public class SelectionSort {
         System.out.println("selection sort before: " + Arrays.toString(array));
         selectionSort(array);
         System.out.println("selection sort after: " + Arrays.toString(array));
+
+        System.out.println(Arrays.toString(sort(new int[]{3, 1, 5, 2, 4, 7, 0, 9, 8})));
     }
 
     public static void selectionSort(int[] array) {
@@ -88,5 +90,21 @@ public class SelectionSort {
         int temp = array[a];
         array[a] = array[b];
         array[b] = temp;
+    }
+
+    public static int[] sort(int[] array) {
+        if (array == null || array.length < 2) {
+            return array;
+        }
+        for (int i = 0; i < array.length; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[j] < array[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            swap(array, i, minIndex);
+        }
+        return array;
     }
 }

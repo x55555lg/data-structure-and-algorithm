@@ -24,7 +24,7 @@ public class SimpleStackQueue<Item> {
      *
      * @param item the item
      */
-    public void push(Item item) {
+    public void add(Item item) {
         while (!pop.isEmpty()) {
             push.push(pop.pop());
         }
@@ -32,28 +32,40 @@ public class SimpleStackQueue<Item> {
     }
 
     /**
-     * 获取数据
+     * 获取并移除数据
      *
      * @return the item
      */
-    public Item pop() {
+    public Item poll() {
         while (!push.empty()) {
             pop.push(push.pop());
         }
         return pop.pop();
     }
 
+    /**
+     * 获取数据
+     *
+     * @return the item
+     */
+    public Item peek() {
+        while (!push.empty()) {
+            pop.push(push.pop());
+        }
+        return pop.peek();
+    }
+
     public static void main(String[] args) {
         SimpleStackQueue<Integer> queue = new SimpleStackQueue<>();
-        queue.push(1);
-        queue.push(2);
-        System.out.println(queue.pop());
-        queue.push(3);
-        queue.push(4);
-        queue.push(5);
-        System.out.println(queue.pop());
-        System.out.println(queue.pop());
-        System.out.println(queue.pop());
-        System.out.println(queue.pop());
+        queue.add(1);
+        queue.add(2);
+        System.out.println(queue.poll());
+        queue.add(3);
+        queue.add(4);
+        queue.add(5);
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
+        System.out.println(queue.poll());
     }
 }

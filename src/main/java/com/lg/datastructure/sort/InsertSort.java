@@ -15,6 +15,8 @@ public class InsertSort {
         System.out.println("insert sort before: " + Arrays.toString(array));
         insertSort(array);
         System.out.println("insert sort after: " + Arrays.toString(array));
+
+        System.out.println(Arrays.toString(sort(new int[]{3, 1, 5, 2, 4, 7, 0, 9, 8})));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -38,7 +40,7 @@ public class InsertSort {
             return;
         }
 
-        if (false) {
+        /*if (false) {
             //  我的正确的高效实现
             for (int i = 0; i < array.length; i++) {
                 // array[i]往前(左)看，array[j]更小的话，就往前挪
@@ -48,13 +50,15 @@ public class InsertSort {
                     }
                 }
             }
-        }
+        }*/
 
         if (true) {
             // 视频中的正确的高效实现
             for (int i = 0; i < array.length; i++) {
-                for (int j = i - 1; j >= 0 && array[j] > array[j + 1]; j--) {
-                    swap(array, j, j + 1);
+                for (int j = i - 1; j >= 0; j--) {
+                    if (array[j] > array[j + 1]) {
+                        swap(array, j, j + 1);
+                    }
                 }
             }
         }
@@ -64,5 +68,41 @@ public class InsertSort {
         int temp = array[a];
         array[a] = array[b];
         array[b] = temp;
+    }
+
+    // 王峥书中的写的复杂了
+    private static void insertSort2(int[] array) {
+        if (array == null || array.length < 2) {
+            return;
+        }
+        for (int i = 0; i < array.length; i++) {
+            int value = array[i];
+            int j = i - 1;
+            for (; j >= 0; j--) {
+                if (array[j] > value) {
+                    array[j + 1] = array[j];
+                } else {
+                    break;
+                }
+            }
+            array[j + 1] = value;
+        }
+    }
+
+
+    public static int[] sort(int[] array) {
+        // 3    4   1   5   2   1   0   6
+        // 0    1   2   3   4   5   6   7
+        if (array == null || array.length < 2) {
+            return array;
+        }
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i; j > 0; j--) {
+                if (array[j] < array[j - 1]) {
+                    swap(array, j, j - 1);
+                }
+            }
+        }
+        return array;
     }
 }
