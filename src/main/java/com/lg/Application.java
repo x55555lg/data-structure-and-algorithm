@@ -1,18 +1,23 @@
 package com.lg;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 /**
  * 数据结构和算法学习
  *
  * @author Xulg
  */
-@SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+    /*
+     * 认识对数器
+     *  说白了就是用来验证自己写的算法正确性的。
+     *
+     *  流程：
+     *      1.你想要测试的方法a；
+     *      2.实现复杂度不好但是容易实现的方法b；
+     *      3.实现一个随机样本产生器
+     *      4.把方法a和方法b跑相同的随机样本，看看得到的结果是否一样；
+     *      5.如果有一个随机样本使得比对结果不一致，打印样本进行人工干预，改对方法a和方法b；
+     *      6.当样本数量很多时比对结果依然正确，可以确定方法a已经正确。
+     */
 
 }

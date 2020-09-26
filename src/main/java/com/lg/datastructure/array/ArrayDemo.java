@@ -135,6 +135,7 @@ class ArrayDemo {
             }
 
             // 数组的中间索引位置和值
+            // 等价写法：int middleIndex = start + ((end - start) >> 1);
             int middleIndex = (start + end) / 2;
             int middleValue = array[middleIndex];
 

@@ -1,121 +1,194 @@
 package com.lg.datastructure.queue;
 
-import javax.annotation.Nonnull;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * 简单的基于链表的单向队列实现
+ * 简单的基于链表的双向队列实现
  *
  * @author Xulg
  * Created in 2020-09-16 13:42
  */
-class SimpleLinkedListQueue<Item> implements SimpleQueue<Item> {
+public class SimpleLinkedListQueue<Item> {
 
-    /**
-     * 最早存放的数据，是一个链表
-     */
-    private Node first;
-
-    /**
-     * 最后存放的一个数据
-     */
-    private Node last;
-
+    private Node<Item> head;
+    private Node<Item> tail;
     private int size;
 
-    @Override
-    public void enqueue(Item item) {
-        Node oldLast = last;
-
-        Node node = new Node();
-        node.item = item;
-        node.next = null;
-
-        if (isEmpty()) {
-            // 链表空的，那么最早和最近都一样
-            first = node;
+    /**
+     * 从队列头插入数据
+     *
+     * @param item the item
+     */
+    public void enqueueFirst(Item item) {
+        Node<Item> node = new Node<>(item);
+        if (head == null) {
+            // 队列空的啊
+            head = tail = node;
         } else {
-            // 将新节点拼接到头节点尾部的后面
-            oldLast.next = node;
+            // 队列已经有数据了啊，新加入的数据将会变成新的头节点
+            Node<Item> oldHead = this.head;
+            oldHead.prev = node;
+            node.prev = null;
+            node.next = oldHead;
+            head = node;
         }
-
-        // 将新数据查到链表尾部
-        last = node;
-
+        // 队列长度自增1
         size++;
     }
 
-    @Override
-    public Item dequeue() {
-        if (first == null) {
-            return null;
+    /**
+     * 从队列尾插入数据
+     *
+     * @param item the item
+     */
+    public void enqueueLast(Item item) {
+        Node<Item> node = new Node<>(item);
+        if (head == null) {
+            // 队列空的啊
+            head = tail = node;
+        } else {
+            // 队列已经有数据了啊，新加入的数据将会变成新的尾节点
+            Node<Item> oldTail = this.tail;
+            node.prev = oldTail;
+            node.next = null;
+            oldTail.next = node;
+            tail = node;
         }
-        // 队列头部就是最早的数据
-        @SuppressWarnings("unchecked")
-        Item item = (Item) first.item;
-        first = first.next;
+        // 队列长度自增1
+        size++;
+    }
+
+    /**
+     * 从头部出队
+     *
+     * @return the item
+     */
+    public Item dequeueFirst() {
+        if (head == null) {
+            throw new NoSuchElementException("队列头没有元素了啊");
+        }
+        Item item = head.item;
+        Node<Item> next = head.next;
+        if (next == null) {
+            // 取掉头部，队列已经空了
+            tail = null;
+        } else {
+            next.prev = null;
+        }
+        head.next = null;
+        head = next;
         size--;
-        if (isEmpty()) {
-            // 队列都空了，last就没用了
-            last = null;
-        }
         return item;
     }
 
-    @Override
-    public boolean isEmpty() {
-        // return size == 0;
-        return first == null;
+    /**
+     * 从尾部出队
+     *
+     * @return the item
+     */
+    public Item dequeueLast() {
+        if (tail == null) {
+            throw new NoSuchElementException("队列尾没有元素了啊");
+        }
+        Item item = tail.item;
+        Node<Item> prev = tail.prev;
+        if (prev == null) {
+            // 取掉尾部，队列已经空了
+            head = null;
+        } else {
+            prev.next = null;
+        }
+        tail.prev = null;
+        tail = prev;
+        size--;
+        return item;
     }
 
-    @Override
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+
+            private Node<Item> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Item next() {
+                Item item = current.item;
+                current = current.next;
+                return item;
+            }
+        };
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     public int size() {
         return size;
     }
 
-    @Nonnull
-    @Override
-    public Iterator<Item> iterator() {
-        return new QueueIterator();
-    }
+    /* ************************************************************************************************************** */
 
-    private static class Node {
-        Object item;
-        Node next;
-    }
+    private static class Node<Item> {
+        Item item;
+        Node<Item> prev;
+        Node<Item> next;
 
-    private class QueueIterator implements Iterator<Item> {
-
-        private Node current = first;
-
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public Item next() {
-            @SuppressWarnings("unchecked")
-            Item item = (Item) current.item;
-            current = current.next;
-            return item;
+        Node(Item item) {
+            this.item = item;
         }
     }
+
+    /* ************************************************************************************************************** */
 
     public static void main(String[] args) {
-        SimpleLinkedListQueue<String> queue = new SimpleLinkedListQueue<>();
-        queue.enqueue("a");
-        queue.enqueue("b");
-        queue.enqueue("c");
-        queue.enqueue("d");
-        queue.enqueue("e");
-        queue.enqueue("f");
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
-        System.out.println(queue.dequeue());
+        SimpleLinkedListQueue<Integer> queue = new SimpleLinkedListQueue<>();
+        queue.enqueueFirst(1);
+        queue.enqueueFirst(2);
+        queue.enqueueFirst(3);
+        queue.enqueueFirst(4);
+        queue.enqueueLast(5);
+        queue.enqueueLast(6);
+
+        // 4    3   2   1   5   6
+        StringBuilder sb = new StringBuilder("for each queue: ");
+        for (Iterator<Integer> iterator = queue.iterator(); iterator.hasNext(); ) {
+            sb.append(iterator.next()).append(" ");
+        }
+        System.out.println(sb.toString());
+
+        // 4
+        System.out.println(queue.dequeueFirst());
+
+        // 6
+        System.out.println(queue.dequeueLast());
+
+        // 3
+        System.out.println(queue.dequeueFirst());
+
+        // 5
+        System.out.println(queue.dequeueLast());
+
+        // 2
+        System.out.println(queue.dequeueFirst());
+
+        // 1
+        System.out.println(queue.dequeueLast());
+
+        try {
+            System.out.println(queue.dequeueFirst());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            System.out.println(queue.dequeueLast());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
