@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author Xulg
  * Created in 2020-09-18 9:17
  */
-public class InsertSort {
+class InsertSort {
     public static void main(String[] args) {
         int[] array = {3, 1, 5, 2, 4, 7, 0, 9, 8};
         System.out.println("insert sort before: " + Arrays.toString(array));

@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author Xulg
  * Created in 2020-09-18 8:26
  */
-public class SelectionSort {
+class SelectionSort {
 
     public static void main(String[] args) {
         int[] array = {3, 1, 5, 2, 4, 7, 0, 9, 8};

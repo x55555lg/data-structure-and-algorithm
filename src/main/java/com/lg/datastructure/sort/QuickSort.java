@@ -7,5 +7,5 @@ package com.lg.datastructure.sort;
  * @author Xulg
  * Created in 2020-09-27 8:36
  */
-public class QuickSort {
+class QuickSort {
 }
