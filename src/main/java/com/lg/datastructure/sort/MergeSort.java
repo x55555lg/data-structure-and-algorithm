@@ -11,6 +11,11 @@ import java.util.Arrays;
  */
 class MergeSort {
 
+    /**
+     * 归并排序的思想：
+     * 将大数组以不同的粒度划分，先让小数组有序
+     */
+
     /*
      * 递归方式实现的归并排序
      * 时间复杂度：
@@ -181,7 +186,7 @@ class MergeSort {
      * 归并排序一般还是用非递归方式的
      */
     @SuppressWarnings({"DuplicatedCode", "ManualArrayCopy"})
-    private static class LoopMergeSort {
+    static class LoopMergeSort {
         public static void mergeSort(int[] array) {
             if (array == null || array.length < 2) {
                 // 排个鸡儿
@@ -260,7 +265,7 @@ class MergeSort {
         private static void merge(int[] array, int left, int mid, int right) {
             /*
              * 原数组：3        1        5        2         4        7        0        9        8
-             * 子数组：3        1        5        2    |    4        7        0        9
+             * 子数组：1        3        2        5    |    4        7        0        9
              * index:  0        1        2        3         4        5        6        7
              *         left                       mid                                  right
              *         leftIdx                              rightIdx
@@ -296,7 +301,8 @@ class MergeSort {
                 idx++;
             }
 
-            // 上面的操作之后，左半部分或者右半部分可能还有部分数组没有处理到，接着处理
+            // 上面的操作之后，左半部分或者右半部分可能
+            // 还有部分数组没有处理到，接着处理
             while (leftIdx <= mid) {
                 temp[idx] = array[leftIdx];
                 leftIdx++;
@@ -307,6 +313,8 @@ class MergeSort {
                 rightIdx++;
                 idx++;
             }
+
+            // 上面操作之后，临时数组temp中的数据是一定有序的
 
             // 将临时数组的数据复制到原数组的[left, right]位置上去
             for (int i = 0; i < temp.length; i++) {
