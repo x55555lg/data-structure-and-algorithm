@@ -175,6 +175,147 @@ class MergeSort {
         }
     }
 
+    /**
+     * 非递归的归并排序
+     * 时间复杂度    O(N*logN)
+     * 归并排序一般还是用非递归方式的
+     */
+    @SuppressWarnings({"DuplicatedCode", "ManualArrayCopy"})
+    private static class LoopMergeSort {
+        public static void mergeSort(int[] array) {
+            if (array == null || array.length < 2) {
+                // 排个鸡儿
+                return;
+            }
+            int length = array.length;
+            /*
+             *说明：
+             * mergeSize表示切分后数组的左边的大小，即数组的一半大小，例如：
+             *  array = {3, 1, 5, 2, 4, 7, 0, 9, 8};
+             *      (1) mergeSize=1时，大数组切分成多个长度为2的子数组，每个子数组分成左右两半，
+             *      mergeSize就是子数组的一半的大小。
+             *          3|1    5|2    4|7    0|9    8
+             *      (2) mergeSize=2时，大数组切分成多个长度为4的子数组，每个子数组分成左右两半，
+             *      mergeSize就是子数组的一半的大小。
+             *          31|52    47|09    8
+             *      (3) mergeSize=4时，大数组切分成多个长度为8的子数组，每个子数组分成左右两半，
+             *      mergeSize就是子数组的一半的大小。
+             *          3152|4709    8
+             *
+             * left为切分后的子数组的左边界
+             *      left初始值为0，left = right + 1;
+             * right为切分后的子数组的右边界
+             *      right = 2 * mid - left + 1;
+             * mid为切分后的子数组的中间位置
+             *      mid = left + mergeSize - 1;
+             *  例如：
+             *      mergeSize=2时，数组切分后为5个子数组如下：
+             *          3|1    5|2    4|7    0|9    8
+             *      子数组1：left = 0, mid = 0, right = 1
+             *      子数组2：left = 2, mid = 2, right = 3
+             *      子数组3：left = 4, mid = 4, right = 5
+             *      子数组4：left = 6, mid = 6, right = 7
+             *      子数组5：不完整
+             *
+             *      mergeSize=2时，数组切分后为3个子数组如下：
+             *          31|52    47|09    8
+             *      子数组1：left = 0, mid = 1, right = 3
+             *      子数组2：left = 4, mid = 5, right = 7
+             *      子数组3: 不完整
+             */
+            for (int mergeSize = 1; mergeSize < length; ) {
+                //遍历各个子数组
+                for (int left = 0; left < length; ) {
+                    // 数组的中间位置
+                    int mid = left + mergeSize - 1;
+                    // mid也不能越界啊
+                    if (mid >= length) {
+                        break;
+                    }
+                    // 算出数组的右边界，不能越界啊
+                    // 等价写法：int right = Math.min(mid + mergeSize, length - 1);
+                    int right = Math.min(2 * mid - left + 1, length - 1);
+                    // merge合并操作
+                    merge(array, left, mid, right);
+                    // 下一个数组的左边界
+                    left = right + 1;
+                }
+
+                /*
+                 * 1.这里的话，如果mergeSize大于了数组一半的长度，那么下一次循环，
+                 * 肯定会跳出了，所以这里加这个判断可以提前退出循环
+                 * 2.其次，如果当数组特别大的时候，mergeSize=21亿，当mergeSize再翻倍就会溢出，
+                 * 溢出后的mergeSize就小于了length，退不出循环了，导致错误
+                 */
+                if (mergeSize > length / 2) {
+                    break;
+                }
+
+                // 子数组长度翻倍
+                // 等价写法：mergeSize = mergeSize * 2;
+                mergeSize = mergeSize << 1;
+            }
+        }
+
+        private static void merge(int[] array, int left, int mid, int right) {
+            /*
+             * 原数组：3        1        5        2         4        7        0        9        8
+             * 子数组：3        1        5        2    |    4        7        0        9
+             * index:  0        1        2        3         4        5        6        7
+             *         left                       mid                                  right
+             *         leftIdx                              rightIdx
+             *      left = 0, right = 7, mid = 3
+             *      leftIdx = 0, rightIdx = mid + 1
+             *  左半数组范围：[leftIdx, mid]
+             *  左半数组范围：[rightIdx, right]
+             */
+            // 申请一个临时数组，数组的大小就是子数组的大小
+            int[] temp = new int[right - left + 1];
+
+            // 临时数组的下标索引
+            int idx = 0;
+            // 子数组的左半部分的开始下标索引
+            int leftIdx = left;
+            // 子数组的右半部分的开始下标索引
+            int rightIdx = mid + 1;
+
+            // 同时遍历数组的左半部分和右半部分
+            while (leftIdx <= mid && rightIdx <= right) {
+                // 如果左半部分数组的值小于等于右半部分数组的值，则在临时数组中插入左半部分数组的值
+                // 否则的话在临时数组中插入右半部分数组的值
+                if (array[leftIdx] <= array[rightIdx]) {
+                    temp[idx] = array[leftIdx];
+                    // 左半部分数组的下标索引后移
+                    leftIdx++;
+                } else {
+                    temp[idx] = array[rightIdx];
+                    // 右半部分数组的下标索引后移
+                    rightIdx++;
+                }
+                // 临时数组的下标索引后移
+                idx++;
+            }
+
+            // 上面的操作之后，左半部分或者右半部分可能还有部分数组没有处理到，接着处理
+            while (leftIdx <= mid) {
+                temp[idx] = array[leftIdx];
+                leftIdx++;
+                idx++;
+            }
+            while (rightIdx <= right) {
+                temp[idx] = array[rightIdx];
+                rightIdx++;
+                idx++;
+            }
+
+            // 将临时数组的数据复制到原数组的[left, right]位置上去
+            for (int i = 0; i < temp.length; i++) {
+                array[left + i] = temp[i];
+            }
+        }
+    }
+
+    /* ************************************************************************************************************** */
 
     public static void main(String[] args) {
         int[] array1 = {3, 1, 5, 2, 4, 7, 0, 9, 8};
@@ -188,6 +329,11 @@ class MergeSort {
         // 非递归方式归并排序
         SimpleMergeSort.mergeSort(array2);
         System.out.println("merge sort after:  " + Arrays.toString(array2));
-    }
 
+        int[] array3 = {3, 1, 5, 2, 4, 7, 0, 9, 8};
+        System.out.println("merge sort before: " + Arrays.toString(array3));
+        // 非递归方式归并排序
+        LoopMergeSort.mergeSort(array3);
+        System.out.println("merge sort after:  " + Arrays.toString(array3));
+    }
 }
