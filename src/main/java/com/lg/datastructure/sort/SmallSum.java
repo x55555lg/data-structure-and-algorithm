@@ -87,6 +87,8 @@ class SmallSum {
         while (leftIdx <= mid && rightIdx <= right) {
             // 如果左半部分数组的值小于右半部分数组的值，则在临时数组中插入左半部分数组的值
             // 否则的话在临时数组中插入右半部分数组的值
+            // 左半部分数组的值a小于右半部分数组的值的时候，就会产生小和
+            // 右半部分数组有x个值比左半部分数组的值a大的，就有x个a
             if (array[leftIdx] < array[rightIdx]) {
                 temp[idx] = array[leftIdx];
                 // 计算小和，在[rightIdx, right]上有几个个数大于array[leftIdx]
