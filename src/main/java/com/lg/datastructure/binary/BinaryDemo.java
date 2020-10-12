@@ -7,7 +7,7 @@ package com.lg.datastructure.binary;
  * @author Xulg
  * Created in 2020-09-18 10:46
  */
-public class BinaryDemo {
+class BinaryDemo {
 
     /*
      * 二分的使用场景：

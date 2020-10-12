@@ -9,7 +9,7 @@ import java.util.Iterator;
  * @author Xulg
  * Created in 2020-09-16 17:42
  */
-public class SimpleLinkedListBag<Item> implements SimpleBag<Item> {
+class SimpleLinkedListBag<Item> implements SimpleBag<Item> {
 
     /**
      * 头节点，保存的是最近插入的数据

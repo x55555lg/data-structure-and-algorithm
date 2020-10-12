@@ -8,7 +8,7 @@ import java.util.Stack;
  * @author Xulg
  * Created in 2020-09-21 17:20
  */
-public class SimpleStackQueue<Item> {
+class SimpleStackQueue<Item> {
 
     private final Stack<Item> push = new Stack<>();
     private final Stack<Item> pop = new Stack<>();

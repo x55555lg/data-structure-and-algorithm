@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created in 2020-04-29 10:01
  */
 @SuppressWarnings("WeakerAccess")
-public class LinkedListStudy {
+class LinkedListStudy {
 
     public static void main(String[] args) {
         // 创建一个单向链表

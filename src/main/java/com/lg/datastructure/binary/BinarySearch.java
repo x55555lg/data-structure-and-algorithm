@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
  * @author Xulg
  * Created in 2020-09-22 9:38
  */
-public class BinarySearch {
+class BinarySearch {
 
     /**
      * 在一个没有重复的数组中查询指定的数
