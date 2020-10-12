@@ -16,6 +16,14 @@ class MergeSort {
      * 将大数组以不同的粒度划分，先让小数组有序
      */
 
+    /**
+     * 使用归并排序可以做的题目：
+     *      1.求数组的小和
+     *          解法：com.lg.datastructure.sort.ArraySmallSum
+     *      2.求数组中有多少个降序对
+     *          解法：com.lg.datastructure.sort.ArrayDescendPair
+     */
+
     /*
      * 递归方式实现的归并排序
      * 时间复杂度：
