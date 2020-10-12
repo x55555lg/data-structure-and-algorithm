@@ -4,11 +4,12 @@ import java.util.Arrays;
 
 /**
  * 求数组的小和问题
+ * 最优解：使用归并排序计算
  *
  * @author Xulg
  * Created in 2020-09-27 11:15
  */
-class SmallSum {
+class ArraySmallSum {
 
     /*
      * 在一个数组中，一个数左边比它小的数的总和，叫做数的小和，所有数的小和累加起来，
