@@ -1,4 +1,4 @@
-package com.lg.datastructure.sort;
+package com.lg.datastructure.sort.mergesort;
 
 /**
  * 数组的降序对

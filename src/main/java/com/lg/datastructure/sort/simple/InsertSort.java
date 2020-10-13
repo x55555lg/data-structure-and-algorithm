@@ -1,4 +1,4 @@
-package com.lg.datastructure.sort;
+package com.lg.datastructure.sort.simple;
 
 import java.util.Arrays;
 

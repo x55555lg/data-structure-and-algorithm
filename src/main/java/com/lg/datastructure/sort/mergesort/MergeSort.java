@@ -1,4 +1,4 @@
-package com.lg.datastructure.sort;
+package com.lg.datastructure.sort.mergesort;
 
 import java.util.Arrays;
 
@@ -19,9 +19,9 @@ class MergeSort {
     /**
      * 使用归并排序可以做的题目：
      *      1.求数组的小和
-     *          解法：com.lg.datastructure.sort.ArraySmallSum
+     *          解法：com.lg.datastructure.sort.mergesort.ArraySmallSum
      *      2.求数组中有多少个降序对
-     *          解法：com.lg.datastructure.sort.ArrayDescendPair
+     *          解法：com.lg.datastructure.sort.mergesort.ArrayDescendPair
      */
 
     /*

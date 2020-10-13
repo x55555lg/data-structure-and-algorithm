@@ -1,4 +1,4 @@
-package com.lg.datastructure.sort;
+package com.lg.datastructure.sort.quicksort;
 
 import org.junit.jupiter.api.Test;
 
