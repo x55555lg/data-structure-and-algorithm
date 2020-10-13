@@ -57,27 +57,38 @@ class QuickSort {
     }
 
     /*
-     * 快排的前置问题：
+     * 快排的前置问题：荷兰旗问题(https://www.jianshu.com/p/356604b8903f)
      *      给定一个数组array，和一个整数num，请把小于num的数放在数组的左边，
      *      等于num的数放在数组中间，大于num的数放在数组的右边。
      *      要求额外的空间复杂度O(1)，时间复杂度O(n)
-     * 思路：设置一个等于区间
+     * 思路：设置一个小于区lessThanIndex，一个大于区greatThanIndex，中间是一个等于区，遍历array数组，
+     *      如果array[i] < num，把小于区的下一个数和array[i]互换，i++
+     *      如果array[i] == num，直接i++
+     *      如果array[i] > num，把大于区的前一个数和array[i]互换，i不变
      */
 
     public static void partition2(int[] array, int value) {
-        int equalsStartIndex = 0;
-        int equalsEndIndex = array.length - 1;
-        //int equalsStartIndex = -1;
-        //int equalsEndIndex = -1;
-        for (int i = 0; i < array.length; i++) {
+        // 小于区的索引
+        int lessThanIndex = -1;
+        // 大于区的索引
+        int greatThanIndex = array.length;
+        // 遍历数组，遍历直到大于区位置就结束了
+        for (int i = 0; i < greatThanIndex; ) {
             if (array[i] < value) {
-                swap(array, equalsStartIndex, i);
-                equalsStartIndex++;
+                // 把小于区的下一个数和array[i]互换
+                swap(array, lessThanIndex + 1, i);
+                // 小于区索引增1
+                lessThanIndex++;
+                i++;
             } else if (array[i] > value) {
-                swap(array, equalsEndIndex, i);
-                equalsEndIndex--;
+                // 把大于区的前一个数和array[i]互换，这里不需要i++，因为
+                // 从大于区换过来的数是不确定大小的，需要重新判断过
+                swap(array, greatThanIndex - 1, i);
+                // 大于区索引减1
+                greatThanIndex--;
             } else {
-
+                // 相等则直接遍历下一个数去
+                i++;
             }
         }
     }
