@@ -44,7 +44,7 @@ class QuickSort2 {
             return;
         }
 
-        // 在[left, right-1]上随机选择一个值和array[right]交换，随机选择比较的值
+        // 在[left, right]上随机选择一个值和array[right]交换，随机选择比较的值
         int randomIdx = (int) (Math.random() * (right - left + 1) + left);
         swap(array, randomIdx, right);
 
