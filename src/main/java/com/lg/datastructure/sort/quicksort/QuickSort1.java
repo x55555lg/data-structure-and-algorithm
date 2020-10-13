@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 /**
  * 快排实现1.0
+ * 时间复杂度:
+ * 最差：O(n^2)
  *
  * @author Xulg
  * Created in 2020-10-13 16:20

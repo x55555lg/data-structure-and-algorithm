@@ -3,18 +3,19 @@ package com.lg.datastructure.sort.quicksort;
 import java.util.Arrays;
 
 /**
- * 快排实现2.0
- * 最差：O(n^2)
+ * 快排实现3.0
+ * 复杂度：O(nlog(n))
+ * 空间复杂度：O(log(n))
  *
  * @author Xulg
  * Created in 2020-10-13 16:20
  */
 @SuppressWarnings({"all"})
-class QuickSort2 {
+class RandomQuickSort {
 
     /*
-     * 快排的实现原理2.0：使用荷兰旗问题的解法写
-     *  在整个数组array[]中，取数组的最后一个值作为比较值，然后进行区间划分
+     * 快排的实现原理3.0：使用荷兰旗问题的解法写，随机选一个值比较
+     *  在整个数组array[]中，随机取数组的一个值作为比较值，然后进行区间划分
      *      ...   1   2   3   4   5   6   ...   7    X
      *            L                                  R
      *            在[L, R-1]上划分区间：小于等于区、大于区
@@ -44,6 +45,11 @@ class QuickSort2 {
         if (left >= right) {
             return;
         }
+
+        // 这里的随机逻辑可以把复杂度从O(n^2)降低到nlog(n)
+        // 在[left, right]上随机选择一个值和array[right]交换，随机选择比较的值
+        int randomIdx = (int) (Math.random() * (right - left + 1) + left);
+        swap(array, randomIdx, right);
 
         // [left, right]上划分区间，获取等于区的索引
         int[] equalsAreaIndex = partition(array, left, right);
