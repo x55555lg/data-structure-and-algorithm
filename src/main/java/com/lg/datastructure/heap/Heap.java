@@ -163,7 +163,7 @@ class Heap {
             // 最后一个元素放到堆顶，count减1
             swap(array, HEAP_TOP_IDX, --count);
 
-            // 堆化操作(heapify)
+            // [0, count-1]上进行堆化操作(heapify)
             this.heapify(array, HEAP_TOP_IDX, count);
 
             // 返回堆顶的值
