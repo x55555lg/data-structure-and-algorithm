@@ -1,7 +1,5 @@
 package com.lg.datastructure.heap;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
@@ -11,6 +9,7 @@ import java.util.PriorityQueue;
  * @author Xulg
  * Created in 2020-10-19 16:04
  */
+@SuppressWarnings("ConstantConditions")
 class HeapMianShiTi {
 
     /*
@@ -29,13 +28,10 @@ class HeapMianShiTi {
      *      3）采用普通堆排序的方法将最后k个元素排序并保存到原数组中。
      */
 
-    // TODO 2020/10/23 还没做呢。。。
-
-    @Test
-    public void test1() {
+    public static void main(String[] args) {
         int[] array = {5, 3, 7, 2, 3, 4, 1};
         System.out.println("sort before: " + Arrays.toString(array));
-        sortWithDistanceLimit(array, array.length, 2);
+        sortWithDistanceLimit(array, 6);
         System.out.println("sort after:  " + Arrays.toString(array));
     }
 
@@ -43,50 +39,31 @@ class HeapMianShiTi {
      * 时间复杂度O(N*log(k))
      */
     private static void sortWithDistanceLimit(int[] array, int k) {
-
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private static void sortWithDistanceLimit(int[] array, int n, int k) {
-        // 将数组的前k个数放入最小堆中
-        PriorityQueue<Integer> heap = new PriorityQueue<>(k + 1);
-        for (int i = 0; i < Math.min(array.length, k + 1); i++) {
-            heap.add(array[i]);
-        }
-        for (int i = 0; i < n; i++) {
-            array[i] = heap.poll();
-            // 将后续的[k+1, array.length]加入堆中
-            if (i + k + 1 < array.length) {
-                heap.add(array[i + k + 1]);
-            }
-        }
-    }
-
-    /**
-     * 视频中的写法
-     * 时间复杂度O(N*log(k))
-     */
-    private static void sortWithDistanceLimit2(int[] array, int k) {
         if (array == null || array.length < 2 || k == 0) {
             return;
         }
+        // 将数组的前k个数([0, k-1])放入最小堆中
+        PriorityQueue<Integer> heap = new PriorityQueue<>(k - 1);
 
-        // 默认小根堆
-        PriorityQueue<Integer> heap = new PriorityQueue<>();
+        // addTo记录堆加到了数组的哪个位置
+        int addTo = 0;
+        for (; addTo < Math.min(array.length, k); addTo++) {
+            heap.add(array[addTo]);
+        }
+
+        // 从上面记录的位置开始，往堆中加一个数，弹一个数
         int index = 0;
-        // [0, k-1]
-        for (; index <= Math.min(array.length - 1, k - 1); index++) {
-            heap.add(array[index]);
+        for (; addTo < array.length; addTo++) {
+            // 数组加到堆中
+            heap.add(array[addTo]);
+            // 从堆中弹出一个数写回原数组
+            array[index++] = heap.poll();
         }
 
-        int i = 0;
-        for (; index < array.length; i++, index++) {
-            heap.add(array[index]);
-            array[i] = heap.poll();
-        }
-
+        // 堆中剩余的数写回原数组中
         while (!heap.isEmpty()) {
-            array[i++] = heap.poll();
+            array[index++] = heap.poll();
         }
     }
+
 }
