@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author Xulg
  * Created in 2020-10-26 9:02
  */
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"ConditionalBreakInInfiniteLoop", "ConstantConditions"})
 class HeapSort {
 
     /*
@@ -18,7 +18,6 @@ class HeapSort {
      * 不稳定
      */
 
-    @SuppressWarnings("ConstantConditions")
     public static void sort(int[] array) {
         if (array == null || array.length < 2) {
             return;
@@ -73,7 +72,6 @@ class HeapSort {
      * @param array the array
      * @param index the start index of the heapify
      */
-    @SuppressWarnings("ConditionalBreakInInfiniteLoop")
     private static void heapInsert(int[] array, int index) {
         while (true) {
             if (index == 0) {
