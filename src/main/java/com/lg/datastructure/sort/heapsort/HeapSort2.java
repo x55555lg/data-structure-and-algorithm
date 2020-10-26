@@ -22,6 +22,16 @@ class HeapSort2 {
         for (int i = array.length - 1; i >= 0; i--) {
             heapify(array, i, array.length);
         }
+        // 上面堆化之后，最大值已经在array[0]位置了
+
+        /*
+         * int n = array.length - 1;
+         * [0, n]上面进行堆化，保证最大值是array[0]，array[0]和array[n]交换
+         * [0, n-1]上面进行堆化，保证最大值是array[0]，array[0]和array[n-1]交换
+         * [0, n-2]上面进行堆化，保证最大值是array[0]，array[0]和array[n-2]交换
+         * ......
+         * [0, 1]上面进行堆化，保证最大值是array[0]，array[0]和array[1]交换
+         */
 
         // 堆的大小
         int heapSize = array.length;
