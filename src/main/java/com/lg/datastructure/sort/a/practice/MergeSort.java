@@ -132,11 +132,5 @@ class MergeSort {
         int[] arr2 = array.clone();
         sortByLoop(arr2);
         System.out.println("非递归after sort: " + Arrays.toString(arr2));
-
-        // 求数组的最小和
-
-        // 求数组的降序对数量
-
-        // TODO 2020/10/23 ......
     }
 }
