@@ -35,9 +35,9 @@ class LinkedListIntersection {
         // 判断两个链表的入环状况
         if (loopNode1 != null && loopNode2 != null) {
             /*
-             * 两个链表都是循环链表，可能会有交点
+             * 两个链表都是循环链表，可能会有交点，可能没有交点，有如下4种情形
              *-----------------------------------
-             * 情形1：链表1，链表2都有各自的入环点
+             * 情形1：链表1，链表2都有各自的入环点，而且有公共环，这种情况两个入环点都是交点
              * 链表1                  链表2
              *         loop1    loop2
              * ○→○→●←○←●←○←○←○←○
@@ -65,6 +65,16 @@ class LinkedListIntersection {
              * 	               ○→○→○
              * loop1 == loop2
              * ◎是交点
+             *-----------------------------------
+             * 情形4：链表1，链表2各自独立。没有交点
+             * 链表1
+             * ○→○→●←○←○
+             * 	       ↓	   ↑
+             * 	       ○→○→○
+             * 链表2
+             * ○→○→●←○←○
+             * 	       ↓	   ↑
+             * 	       ○→○→○
              */
             return getBothLoopIntersection(header1, loopNode1, header2, loopNode2);
         } else if (loopNode1 == null && loopNode2 == null) {
@@ -118,6 +128,8 @@ class LinkedListIntersection {
         }
         if (loopNode1 == loopNode2) {
             /*
+             *入环点是同一个的情况：
+             *-------------------------
              *情形1
              *        链表2
              *         ○
@@ -184,6 +196,9 @@ class LinkedListIntersection {
             return loopNode1;
         } else {
             /*
+             *入环点不是同一个的情况：
+             *-------------------------
+             *情形1
              * 链表1                  链表2
              *         loop1    loop2
              * ○→○→●←○←●←○←○←○←○
@@ -191,16 +206,32 @@ class LinkedListIntersection {
              * 	       ○→○→○
              *对链表1来说，loop2是交点
              *对链表2来说，loop1是交点
+             *-------------------------
+             *情形2
+             * 链表1                  链表2
+             * ○→○→●←○←○     ○→○→●←○←○
+             * 	       ↓	   ↑             ↓	  ↑
+             * 	       ○→○→○             ○→○→○
+             *没有交点啊
+             *=========================
+             * 解决思路：
+             *  从loop1出发开始遍历链表1，如果能遇到loop2，说明两个链表有公共环，那么loop1，loop2都是交点；
+             *  否则的话，两个链表就是独立的，没有交点。
              */
-            // Why?
-            Node currentNode1 = loopNode1.next;
-            while (currentNode1 != loopNode1) {
-                if (currentNode1 == loopNode2) {
+            Node currentNode = loopNode1;
+            while (true) {
+                if (currentNode == loopNode2) {
+                    // 从loop1节点出发遇到了loop2，两个链表有公共环，loop1，loop2都是交点
                     return loopNode1;
+                } else {
+                    // 继续向下走
+                    currentNode = currentNode.next;
                 }
-                currentNode1 = currentNode1.next;
+                if (currentNode == loopNode1) {
+                    // 饶了一圈又回来了，说明整个环已经遍历完了，没有遇到loop2节点
+                    return null;
+                }
             }
-            return null;
         }
     }
 
