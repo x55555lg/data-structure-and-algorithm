@@ -4,12 +4,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * 获取二叉树中的最大搜索二叉树的头节点
+ * 获取二叉树中的最大搜索二叉树的头(根)节点
  *
  * @author Xulg
  * Created in 2020-11-03 11:57
  */
-class GetMaxBinarySearchSubTree {
+class GetMaxBinarySearchSubTreeHeader {
 
     /*
      * 给定一个二叉树的头节点head。返回这颗二叉树中最大的二叉搜索子树的头节点
@@ -27,12 +27,12 @@ class GetMaxBinarySearchSubTree {
     /**
      * 获取二叉树中的最大搜索二叉树的头节点
      */
-    public static int getMaxBinarySearchSubTree(Node root) {
+    @SuppressWarnings("ConstantConditions")
+    public static Node getMaxBinarySearchSubTree(Node root) {
         if (root == null) {
-            return 0;
+            return null;
         }
-        //noinspection ConstantConditions
-        return doGetMaxBinarySearchSubTree(root).maxSubBinarySearchTreeSize;
+        return doGetMaxBinarySearchSubTree(root).maxSubBinarySearchTreeHeader;
     }
 
     @Nullable
@@ -40,58 +40,51 @@ class GetMaxBinarySearchSubTree {
         if (node == null) {
             return null;
         }
-
-        // 左子树信息
+        // 获取左子树的信息
         Info leftInfo = doGetMaxBinarySearchSubTree(node.left);
-        // 右子树信息
+        // 获取右子树的信息
         Info rightInfo = doGetMaxBinarySearchSubTree(node.right);
 
         /*当前这颗树的信息是什么样的呢*/
 
         // 当前树的最大值 = max(左子树的最大值, 右子树的最大值);
-        int maxVal = maxValue(node, leftInfo, rightInfo);
+        int maxValue = maxValue(node, leftInfo, rightInfo);
         // 当前树的最大值 = max(左子树的最小值, 右子树的最小值);
-        int minVal = minValue(node, leftInfo, rightInfo);
+        int minValue = minValue(node, leftInfo, rightInfo);
         // 当前树是否是二叉搜索树 = 当前节点value > 左子树最大值 && 当前节点value < 右子树最小值
-        boolean isSearchBinaryTree = isSearchBinaryTree(node, leftInfo, rightInfo);
+        boolean isBinarySearchTree = isBinarySearchTree(node, leftInfo, rightInfo);
 
+        // 当前树的最大二叉搜索子树的头节点
+        Node header;
         // 当前树的最大二叉搜索子树
         int treeSize;
-        if (isSearchBinaryTree) {
+        if (isBinarySearchTree) {
             // 当前树也是二叉搜索树，也就是最大二叉搜索子树和当前节点X有关，
             // 即以X节点为头节点的整颗树都是二叉搜索树啊
             // 当前树最大二叉搜索子树节点数量 = 左子树节点数 + 右子树节点数 + 当前节点1;
             treeSize = (leftInfo == null ? 0 : leftInfo.maxSubBinarySearchTreeSize)
                     + (rightInfo == null ? 0 : rightInfo.maxSubBinarySearchTreeSize)
                     + 1;
+
+            // X节点就是最大二叉搜索树的头节点
+            header = node;
         } else {
             // 当前树不是二叉搜索树，也就是最大二叉搜索子树和当前节点X无关，
             // 所有以X节点为头节点的树中，最大二叉搜索子树在左右子树中，
             // 当前树最大二叉搜索子树节点数量 = max(左子树节点数, 右子树节点数);
             treeSize = Math.max(leftInfo == null ? 0 : leftInfo.maxSubBinarySearchTreeSize,
                     rightInfo == null ? 0 : rightInfo.maxSubBinarySearchTreeSize);
+
+            // header为节点数大的那个子树的header
+            if (leftInfo != null && leftInfo.maxSubBinarySearchTreeSize == treeSize) {
+                header = leftInfo.maxSubBinarySearchTreeHeader;
+            } else if (rightInfo != null && rightInfo.maxSubBinarySearchTreeSize == treeSize) {
+                header = rightInfo.maxSubBinarySearchTreeHeader;
+            } else {
+                header = null;
+            }
         }
-        // 当前树的信息啊
-        return new Info(treeSize, isSearchBinaryTree, maxVal, minVal);
-    }
-
-    private static int maxSubBinarySearchTreeSize(Info leftInfo, Info rightInfo) {
-        // 当前树节点数量 = 左子树节点数 + 右子树节点数 + 当前节点1;
-        return (leftInfo == null ? 0 : leftInfo.maxSubBinarySearchTreeSize)
-                + (rightInfo == null ? 0 : rightInfo.maxSubBinarySearchTreeSize)
-                + 1;
-    }
-
-    private static boolean isSearchBinaryTree(Node node, Info leftInfo, Info rightInfo) {
-        /*
-         * 当前树是否是二叉搜索树 = 左子树是二叉搜索子树 && 右子树是二叉搜索子树
-         *                       && 当前节点value > 左子树最大值
-         *                       && 当前节点value < 右子树最小值
-         */
-        return (leftInfo == null || leftInfo.isSearchBinaryTree)
-                && (rightInfo == null || rightInfo.isSearchBinaryTree)
-                && (leftInfo == null || node.value > leftInfo.maxVal)
-                && (rightInfo == null || node.value < rightInfo.minVal);
+        return new Info(header, treeSize, isBinarySearchTree, maxValue, minValue);
     }
 
     private static int maxValue(Node node, Info leftInfo, Info rightInfo) {
@@ -116,22 +109,30 @@ class GetMaxBinarySearchSubTree {
         return minValue;
     }
 
+    private static boolean isBinarySearchTree(Node node, Info leftInfo, Info rightInfo) {
+        return (leftInfo == null || leftInfo.isSearchBinaryTree)
+                && (rightInfo == null || rightInfo.isSearchBinaryTree)
+                && (leftInfo == null || node.value > leftInfo.maxVal)
+                && (rightInfo == null || node.value < rightInfo.minVal);
+    }
+
     /* ************************************************************************************************************** */
 
     /* 对数器 */
 
-    public static int maxSubBSTSize(Node head) {
+    public static Node maxSubBSTHead1(Node head) {
         if (head == null) {
-            return 0;
+            return null;
         }
-        int h = getBSTSize(head);
-        if (h != 0) {
-            return h;
+        if (getBSTSize(head) != 0) {
+            return head;
         }
-        return Math.max(maxSubBSTSize(head.left), maxSubBSTSize(head.right));
+        Node leftAns = maxSubBSTHead1(head.left);
+        Node rightAns = maxSubBSTHead1(head.right);
+        return getBSTSize(leftAns) >= getBSTSize(rightAns) ? leftAns : rightAns;
     }
 
-    private static int getBSTSize(Node head) {
+    public static int getBSTSize(Node head) {
         if (head == null) {
             return 0;
         }
@@ -145,7 +146,7 @@ class GetMaxBinarySearchSubTree {
         return arr.size();
     }
 
-    private static void in(Node head, ArrayList<Node> arr) {
+    public static void in(Node head, ArrayList<Node> arr) {
         if (head == null) {
             return;
         }
@@ -154,12 +155,11 @@ class GetMaxBinarySearchSubTree {
         in(head.right, arr);
     }
 
-    private static Node generateRandomBST(int maxLevel, int maxValue) {
+    public static Node generateRandomBST(int maxLevel, int maxValue) {
         return generate(1, maxLevel, maxValue);
     }
 
-    @SuppressWarnings("DuplicatedCode")
-    private static Node generate(int level, int maxLevel, int maxValue) {
+    public static Node generate(int level, int maxLevel, int maxValue) {
         if (level > maxLevel || Math.random() < 0.5) {
             return null;
         }
@@ -182,6 +182,8 @@ class GetMaxBinarySearchSubTree {
     }
 
     private static class Info {
+        // 最大二叉搜索子树的头节点
+        Node maxSubBinarySearchTreeHeader;
         // 最大二叉搜索子树的节点个数
         int maxSubBinarySearchTreeSize;
         // 是否是搜索二叉树
@@ -191,9 +193,9 @@ class GetMaxBinarySearchSubTree {
         // 二叉树中的最小值
         int minVal;
 
-        public Info(int maxSubBinarySearchTreeSize,
-                    boolean isSearchBinaryTree,
-                    int maxVal, int minVal) {
+        Info(Node maxSubBinarySearchTreeHeader, int maxSubBinarySearchTreeSize,
+             boolean isSearchBinaryTree, int maxVal, int minVal) {
+            this.maxSubBinarySearchTreeHeader = maxSubBinarySearchTreeHeader;
             this.maxSubBinarySearchTreeSize = maxSubBinarySearchTreeSize;
             this.isSearchBinaryTree = isSearchBinaryTree;
             this.maxVal = maxVal;
@@ -209,7 +211,7 @@ class GetMaxBinarySearchSubTree {
         int testTimes = 1000000;
         for (int i = 0; i < testTimes; i++) {
             Node head = generateRandomBST(maxLevel, maxValue);
-            if (maxSubBSTSize(head) != getMaxBinarySearchSubTree(head)) {
+            if (getMaxBinarySearchSubTree(head) != maxSubBSTHead1(head)) {
                 System.out.println("Oops!");
             }
         }
