@@ -116,6 +116,7 @@ class UnionFind {
             while (node != fatherNode) {
                 path.push(node);
                 node = fatherNode;
+                fatherNode = parents.get(node);
             }
             // 优化：沿途的这些节点都指向最终父节点
             while (!path.isEmpty()) {
