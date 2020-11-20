@@ -3,10 +3,9 @@ package com.lg.datastructure.graph;
 import com.lg.datastructure.graph.base.Edge;
 import com.lg.datastructure.graph.base.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * 有向图中单个源点到其他顶点的最短路径
@@ -15,7 +14,7 @@ import java.util.Map.Entry;
  * Created in 2020-11-20 9:47
  */
 @SuppressWarnings({"MapOrSetKeyShouldOverrideHashCodeEquals", "AlibabaCollectionInitShouldAssignCapacity"})
-class MinimumDistance {
+class MinimumDistance2 {
 
     /*
      *Dijkstra算法
@@ -172,63 +171,191 @@ class MinimumDistance {
             return null;
         }
 
-        /*
-         * 从from点出发到所有点的最小距离表
-         *      key:     从from点出发到达的目的节点
-         *      value:   从from点出发到达目的节点的最小距离
-         * 初始状态只有一条数据，即from点到自己的距离为0
-         * 如果在表中但没有T节点的记录，含义是从from点出发到T这个点的距离为正无穷
-         */
+        NodeHeap nodeHeap = new NodeHeap();
+        nodeHeap.addOrUpdateOrIgnore(from, 0);
+
         HashMap<Node, Integer> nodeDistanceMap = new HashMap<>();
-        // from点到from点的距离就是0
-        nodeDistanceMap.put(from, 0);
-
-        // 记录表，记录哪些节点选择过了
-        HashSet<Node> selectedNodeSet = new HashSet<>();
-
-        // 从距离表中拿出没记录过的距离最小的节点
-        Node minNode = getMinDistanceAndUnselectedNode(nodeDistanceMap, selectedNodeSet);
-        while (minNode != null) {
-            // 获取from节点到minNode节点的距离
-            int distance = nodeDistanceMap.get(minNode);
+        while (!nodeHeap.isEmpty()) {
+            NodeDistanceData nodeDistanceData = nodeHeap.pop();
+            Node minNode = nodeDistanceData.toNode;
+            int distance = nodeDistanceData.distance;
             for (Edge edge : minNode.edges) {
                 Node toNode = edge.to;
-                // 计算from节点到toNode节点的距离 = 获取from节点到minNode节点的距离 + minNode节点到toNode节点的距离
-                int distanceBetweenFromNodeAndToNode = distance + edge.weight;
-                if (nodeDistanceMap.containsKey(toNode)) {
-                    // 距离表中已经有这个点的距离信息了，则取小的那个距离保持
-                    int minDistance = Math.min(distanceBetweenFromNodeAndToNode, nodeDistanceMap.get(toNode));
-                    nodeDistanceMap.put(toNode, minDistance);
-                } else {
-                    nodeDistanceMap.put(toNode, distanceBetweenFromNodeAndToNode);
-                }
+                int distanceBetweenFromAndTo = distance + edge.weight;
+                nodeHeap.addOrUpdateOrIgnore(toNode, distanceBetweenFromAndTo);
             }
-            // 标记这个节点已经选择过了
-            selectedNodeSet.add(minNode);
-            // 重新获取一个未选择过的最小距离节点
-            minNode = getMinDistanceAndUnselectedNode(nodeDistanceMap, selectedNodeSet);
+            // 这里没有问题，因为如果节点一样的话会覆盖之前的结果
+            // 而且后面的结果一定比之前的结果要小
+            nodeDistanceMap.put(minNode, distance);
         }
-
         return nodeDistanceMap;
     }
 
-    private static Node getMinDistanceAndUnselectedNode(HashMap<Node, Integer> nodeDistanceMap,
-                                                        HashSet<Node> selectedNodeSet) {
-        // 挑选出没被选则过，距离最小的节点
-        Node minNode = null;
-        Integer minDistance = Integer.MAX_VALUE;
-        for (Entry<Node, Integer> entry : nodeDistanceMap.entrySet()) {
-            Node node = entry.getKey();
-            Integer distance = entry.getValue();
-            if (!selectedNodeSet.contains(node) && distance < minDistance) {
-                minNode = node;
-                minDistance = distance;
-            }
+    @SuppressWarnings("FieldCanBeLocal")
+    private static class NodeDistanceData implements Comparable<NodeDistanceData> {
+        // 目的节点
+        private final Node toNode;
+        private final int distance;
+
+        NodeDistanceData(Node toNode, int distance) {
+            this.toNode = toNode;
+            this.distance = distance;
         }
-        return minNode;
+
+        @Override
+        public int compareTo(NodeDistanceData another) {
+            return this.distance - another.distance;
+        }
     }
 
     /**
-     * 优化版本：使用堆来弹出最小距离的点
+     * 实现数据修改了可调整的小根堆
      */
+    private static class NodeHeap {
+        // 堆顶索引位置
+        private static final int HEAP_TOP_INDEX = 0;
+        // 堆存放数据的地方
+        private final ArrayList<Node> table;
+        // 节点和节点的索引位置，key为节点，value为节点在堆中的索引位置
+        // 如果value为-1表示这个节点已经选择过了，不需要处理了
+        private final HashMap<Node, Integer> nodeIndexMap;
+        // 下一个存储数据的index位置
+        private int count;
+        // 源点到各个节点的最小距离表
+        // key为某个节点， value 从源节点出发到该节点的目前最小距离
+        private final HashMap<Node, Integer> distanceMap;
+
+        NodeHeap() {
+            table = new ArrayList<>();
+            nodeIndexMap = new HashMap<>();
+            distanceMap = new HashMap<>();
+            count = 0;
+        }
+
+        public boolean isEmpty() {
+            return count == 0;
+        }
+
+        public void addOrUpdateOrIgnore(Node toNode, int distance) {
+            if (toNode == null) {
+                return;
+            }
+            if (nodeIndexMap.containsKey(toNode) && nodeIndexMap.get(toNode) == -1) {
+                // 这个节点已经选择过了，忽略
+                return;
+            }
+            if (nodeIndexMap.containsKey(toNode)) {
+                // 更新
+                int minDistance = Math.min(distance, distanceMap.get(toNode));
+                distanceMap.put(toNode, minDistance);
+
+                // 从修改位置开始堆化
+                int idx = nodeIndexMap.get(toNode);
+                // 向上堆化
+                heapifyInsert(idx);
+                // 向下堆化
+                heapify(idx, count);
+            } else {
+                // 将数据加入堆中
+                int idx = count;
+                table.add(idx, toNode);
+                nodeIndexMap.put(toNode, idx);
+                distanceMap.put(toNode, distance);
+                // 堆的个数+1
+                count++;
+
+                // 从idx位置开始，向上进行堆化操作
+                heapifyInsert(idx);
+            }
+        }
+
+        public NodeDistanceData pop() {
+            if (count == 0) {
+                return null;
+            }
+
+            Node minNode = table.get(HEAP_TOP_INDEX);
+
+            // 将堆中的最后一个元素挪到堆顶位置
+            int lastIdx = count - 1;
+            swap(HEAP_TOP_INDEX, lastIdx);
+
+            // 标记这个节点已经选择过了
+            nodeIndexMap.put(minNode, -1);
+            // 移除无用的信息
+            Integer distance = distanceMap.remove(minNode);
+            table.remove(lastIdx);
+            count--;
+
+            heapify(HEAP_TOP_INDEX, count);
+
+            return new NodeDistanceData(minNode, distance);
+        }
+
+        public HashMap<Node, Integer> getDistanceMap() {
+            return distanceMap;
+        }
+
+        private void heapifyInsert(int idx) {
+            // 向上看到根节点为止
+            while (idx > 0) {
+                // 计算父节点的index位置
+                int parentIdx = (idx - 1) / 2;
+                // 如果子节点的值大于父节点的值，要保证是小根堆，进行交换
+                if (distanceMap.get(table.get(idx)) > distanceMap.get(table.get(parentIdx))) {
+                    swap(idx, parentIdx);
+                }
+                // 看父节点是什么情况
+                idx = parentIdx;
+            }
+        }
+
+        private void heapify(int parentIdx, int heapSize) {
+            while (true) {
+                // 左子节点的位置
+                int leftIdx = 2 * parentIdx + 1;
+                // 右子节点的位置
+                int rightIdx = leftIdx + 1;
+
+                // 左子节点的位置越界了，右子节点肯定也越界了，结束流程
+                if (leftIdx >= heapSize) {
+                    break;
+                }
+
+                // 取左右节点中值小的那个
+                int smallIdx;
+                if (rightIdx < heapSize) {
+                    int leftDistance = distanceMap.get(table.get(leftIdx));
+                    int rightDistance = distanceMap.get(table.get(rightIdx));
+                    smallIdx = leftDistance < rightDistance ? leftIdx : rightIdx;
+                } else {
+                    // 右子节点已经越界，所有左子节点就是小的那个
+                    smallIdx = leftIdx;
+                }
+
+                // 父节点和小的子节点比较
+                int oldParentIdx = parentIdx;
+                if (distanceMap.get(table.get(parentIdx))
+                        > distanceMap.get(table.get(smallIdx))) {
+                    // 父节点大于子节点，进行交换
+                    swap(parentIdx, smallIdx);
+                    // 下一个父节点
+                    parentIdx = smallIdx;
+                }
+                if (oldParentIdx == parentIdx) {
+                    // 父节点没有变化，说明父节点已经是最小的了，不需要再进行交换了
+                    break;
+                }
+            }
+        }
+
+        private void swap(int idx1, int idx2) {
+            Node node1 = table.get(idx1);
+            Node node2 = table.get(idx2);
+            table.set(idx1, node2);
+            table.set(idx2, node1);
+            nodeIndexMap.put(node1, idx2);
+            nodeIndexMap.put(node2, idx1);
+        }
+    }
 }
