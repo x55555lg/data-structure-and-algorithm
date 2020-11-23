@@ -213,7 +213,7 @@ class MinimumSpanningTree {
      *                    1 ╱            ╲100
      *                   ╱                  ╲
      *          ╭─╮↙          3             ↖╭─╮
-     *          │2 │一一一一一一→→一一一一一→│4 │
+     *          │2 │→一一一一一→→一一一一一→│4 │
      *          ╰─╯↘                        ↗╰─╯
      *                   ╲                  ╱
      *                   2  ╲            ╱50
@@ -286,7 +286,7 @@ class MinimumSpanningTree {
                         minimumSpanningTree.add(edge);
                         // 将该边的指向点加入到被选取的点中，即解锁该点
                         recordNodeSet.add(toNode);
-                        // 解锁从to节点点出发的所有边，加入小根堆
+                        // 解锁从to节点出发的所有边，加入小根堆
                         edgeSmallHeap.addAll(toNode.edges);
                     }
                 }
