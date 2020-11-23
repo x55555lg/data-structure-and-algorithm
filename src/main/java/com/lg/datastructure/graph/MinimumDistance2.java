@@ -176,23 +176,25 @@ class MinimumDistance2 {
 
         HashMap<Node, Integer> nodeDistanceMap = new HashMap<>();
         while (!nodeHeap.isEmpty()) {
+            // 从距离表中拿出没记录过的距离最小的节点
             NodeDistanceData nodeDistanceData = nodeHeap.pop();
             Node minNode = nodeDistanceData.toNode;
+            // 获取from节点到minNode节点的距离
             int distance = nodeDistanceData.distance;
             for (Edge edge : minNode.edges) {
                 Node toNode = edge.to;
+                // 计算from节点到toNode节点的距离 = 获取from节点到minNode节点的距离 + minNode节点到toNode节点的距离
                 int distanceBetweenFromAndTo = distance + edge.weight;
                 nodeHeap.addOrUpdateOrIgnore(toNode, distanceBetweenFromAndTo);
             }
-            // 这里没有问题，因为如果节点一样的话会覆盖之前的结果
-            // 而且后面的结果一定比之前的结果要小
+            // 存入结果
             nodeDistanceMap.put(minNode, distance);
         }
         return nodeDistanceMap;
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static class NodeDistanceData implements Comparable<NodeDistanceData> {
+    private static class NodeDistanceData {
         // 目的节点
         private final Node toNode;
         private final int distance;
@@ -200,11 +202,6 @@ class MinimumDistance2 {
         NodeDistanceData(Node toNode, int distance) {
             this.toNode = toNode;
             this.distance = distance;
-        }
-
-        @Override
-        public int compareTo(NodeDistanceData another) {
-            return this.distance - another.distance;
         }
     }
 
@@ -244,6 +241,7 @@ class MinimumDistance2 {
                 // 这个节点已经选择过了，忽略
                 return;
             }
+
             if (nodeIndexMap.containsKey(toNode)) {
                 // 更新
                 int minDistance = Math.min(distance, distanceMap.get(toNode));
@@ -253,7 +251,7 @@ class MinimumDistance2 {
                 int idx = nodeIndexMap.get(toNode);
                 // 向上堆化
                 heapifyInsert(idx);
-                // 向下堆化
+                // 向下堆化，这里其实不需要向下堆化，因为这个位置后面根本没有节点了
                 heapify(idx, count);
             } else {
                 // 将数据加入堆中
@@ -287,13 +285,10 @@ class MinimumDistance2 {
             table.remove(lastIdx);
             count--;
 
+            // 从上到下堆化操作
             heapify(HEAP_TOP_INDEX, count);
 
             return new NodeDistanceData(minNode, distance);
-        }
-
-        public HashMap<Node, Integer> getDistanceMap() {
-            return distanceMap;
         }
 
         private void heapifyInsert(int idx) {
