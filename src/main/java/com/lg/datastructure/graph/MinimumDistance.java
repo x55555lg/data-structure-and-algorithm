@@ -228,7 +228,9 @@ class MinimumDistance {
         return minNode;
     }
 
-    /**
+    /*
      * 优化版本：使用堆来弹出最小距离的点
+     *  com.lg.datastructure.graph.MinimumDistance2
      */
+
 }

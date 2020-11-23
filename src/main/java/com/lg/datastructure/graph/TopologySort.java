@@ -40,7 +40,8 @@ class TopologySort {
          * key：  节点本身
          * value：节点的剩余入度
          */
-        HashMap<Node, Integer> nodeInDegreeIndexMap = new HashMap<>(graph.nodes.size() * 4 / 3 + 1);
+        HashMap<Node, Integer> nodeInDegreeIndexMap = new HashMap<>(
+                graph.nodes.size() * 4 / 3 + 1);
 
         /*
          * 记录入度为0的节点有哪些啊
