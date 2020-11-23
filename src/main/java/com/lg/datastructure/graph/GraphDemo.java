@@ -155,6 +155,8 @@ class GraphDemo {
      *  3.从距离表中拿出没拿过记录里的最小记录，通过这个点发出的边，更新
      *    源点到各个点的最小距离表，不断重复这一步
      *  4.源点到所有的点记录如果都被拿过一遍，过程停止，最小距离表得到了
+     * 代码：com.lg.datastructure.graph.MinimumDistance#dijkstra()
+     * 代码：com.lg.datastructure.graph.MinimumDistance2#dijkstra()
      */
 
     /*

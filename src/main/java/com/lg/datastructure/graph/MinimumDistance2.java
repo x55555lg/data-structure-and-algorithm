@@ -41,14 +41,18 @@ class MinimumDistance2 {
      *                           │B │
      *                           ╰─╯
      * 初始状态下：
-     *      从from点出发到所有点的最小距离表，初始状态下只有一条记录，from节点到A节点的距离为0
-     *       HashMap<Node, Integer> nodeDistanceMap
-     *          { {A:0} }
-     *      记录哪些节点选择过了，初始状态下为空集合
-     *       HashSet<Node> selectedNodeSet
-     *          {}
+     *      创建一个自定义的小根堆，按照from节点到to节点的距离从小到大排序，
+     *      初始状态下只有一条记录，from节点到A节点的距离为0
+     *          NodeHeap nodeHeap = new NodeHeap();
+     *              ArrayList<Node> table;                  存储节点的数组
+     *                  table           { A }
+     *              HashMap<Node, Integer> nodeIndexMap     节点在堆中的位置，如果value为-1表示这个节点已经选择过了
+     *                  nodeIndexMap    { {A, 0} }
+     *              HashMap<Node, Integer> distanceMap;     源点到各个节点的最小距离表，key为某个to节点，
+     *                                                      value为from节点到to节点的距离
+     *                  distanceMap     { {A: 0} }
      *========================================================================================
-     * 1.从距离表中拿出没记录过的距离最小的节点，只有一个A节点，拿出A节点
+     * 1.从小根堆中弹出没记录过的距离最小的节点，只有一个A节点，拿出A节点
      * 2.从距离表中拿到from节点到A节点的记录，int distance = nodeDistanceMap.get(A);
      *      这里的话，distance = 0;
      * 3.遍历A节点的所有边：
