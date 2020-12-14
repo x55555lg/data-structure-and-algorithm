@@ -25,7 +25,7 @@ class CheckIsFullBinaryTree {
      */
     public static boolean isFullBalanceTree(Node root) {
         Info treeInfo = doCheckIsFullBalanceTree(root);
-        // 是否满二叉树：2^H = N
+        // 是否满二叉树：2^H -1 = N
         return (int) (Math.pow(2, treeInfo.treeHigh) - 1) == treeInfo.treeSize;
     }
 
