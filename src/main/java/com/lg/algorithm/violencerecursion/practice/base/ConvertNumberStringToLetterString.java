@@ -99,6 +99,61 @@ public class ConvertNumberStringToLetterString {
 
     /* ****************************************************************************************************************/
 
+    /**
+     * 动态规划的解法
+     */
+    public static int dp(String numberStr) {
+        if (numberStr == null || numberStr.length() == 0) {
+            return 0;
+        }
+        char[] chars = numberStr.toCharArray();
+        int n = chars.length;
+        // 动态规划表：数组的index表示当前字符的位置，数组的值表示有几种走法
+        int[] dpTable = new int[n + 1];
+        // base case：当前字符位置越界了，表示是一种有效的组合方式，所以有1中走法
+        dpTable[n] = 1;
+
+        // n处已经知道结果了，从n-1开始
+        for (int currentIdx = n - 1; currentIdx >= 0; currentIdx--) {
+            // 以0开头的话，没有可以组合出来的字母啊
+            if (chars[currentIdx] == '0') {
+                dpTable[currentIdx] = 0;
+            }
+            // 首位是1的话可以选择是1位数还是2位数
+            else if (chars[currentIdx] == '1') {
+                // 选择是1位数
+                int count = dpTable[currentIdx + 1];
+                // 选择是2位数，前提是不越界啊
+                if (currentIdx + 1 < chars.length) {
+                    // 这里由于下一位已经选择过了，所有currentIdx是加2
+                    count = count + dpTable[currentIdx + 2];
+                }
+                dpTable[currentIdx] = count;
+            }
+            // 首位是2的话可以选择是1位数还是2位数
+            else if (chars[currentIdx] == '2') {
+                // 选择是1位数
+                int count = dpTable[currentIdx + 1];
+                // 选择是2位数，前提是不越界啊，而且只能是20,21,22,23,24,25,26
+                // 所以第二位的数字只能是0,1,2,3,4,5,6
+                if (currentIdx + 1 < chars.length
+                        && chars[currentIdx + 1] >= '0'
+                        && chars[currentIdx + 1] <= '6') {
+                    // 这里由于下一位已经选择过了，所有currentIdx是加2
+                    count = count + dpTable[currentIdx + 2];
+                }
+                dpTable[currentIdx] = count;
+            }
+            // 首位是3,4,5,6,7,8,9的话只能是1位数
+            else {
+                dpTable[currentIdx] = dpTable[currentIdx + 1];
+            }
+        }
+        return dpTable[0];
+    }
+
+    /* ****************************************************************************************************************/
+
     /* 对数器方法 */
 
     public static int number(String str) {
@@ -143,13 +198,14 @@ public class ConvertNumberStringToLetterString {
 
     public static void main(String[] args) {
         System.out.println(Math.pow(8, 10));
-        int times = 100000000;
+        int times = 10000000;
         for (int time = 0; time < times; time++) {
             // 随机生成1~8位长的数字字符串
             String numeric = RandomStringUtils.randomNumeric(1, 9);
             int count1 = getConvertCount(numeric);
             int count2 = number(numeric);
-            if (count1 != count2) {
+            int count3 = dp(numeric);
+            if (!(count1 == count2 && count2 == count3)) {
                 System.out.println("Oops!======numeric为" + numeric);
             }
         }

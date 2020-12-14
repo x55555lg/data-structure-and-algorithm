@@ -102,8 +102,8 @@ class MaxValueForBag {
     /**
      * 暴力递归
      *
-     * @param items      物品列表
-     * @param bagMaxLoad 背包最大载荷重量
+     * @param items      物品列表，不变参数
+     * @param bagMaxLoad 背包最大载荷重量，不变参数
      * @param currentIdx 当前物品的位置
      * @param bagWeight  此时背包的质量
      * @return 返回最大价值，返回-1表示没有价值
@@ -211,36 +211,108 @@ class MaxValueForBag {
 
     /* ****************************************************************************************************************/
 
-    @SuppressWarnings("UnusedReturnValue")
-    private static Record recurseProcess(Item[] items, int currentIdx, int remainderBagLoad) {
-        if (remainderBagLoad < 0) {
-            // 背包空间没了
-            return new Record(-1, 0);
+    /**
+     * 获取背包可负载的最大价值
+     * 动态规划的写法
+     *
+     * @param weights    物品重量列表
+     * @param values     物品价值列表
+     * @param bagMaxLoad 背包最大负载重量
+     * @return 背包最大价值
+     */
+    public static int dpWays1(int[] weights, int[] values, int bagMaxLoad) {
+        if (weights == null || values == null || bagMaxLoad <= 0) {
+            return 0;
         }
-        if (remainderBagLoad == 0) {
-            // 背包空间刚好用完了，这个时候能返回的物品价值就是0
-            return new Record(0, 0);
+        assert weights.length == values.length;
+        int n = weights.length;
+
+        // 动态规划表：行表示当前物品的位置index，列表示当前背包的重量bagWeight
+        int[][] dpTable = new int[n + 1][bagMaxLoad + 1];
+        // 物品选完的时候，能返回的物品价值是0；也就是第n行的值都是0；这里不写也没事，因为默认值就是0
+        for (int currentBagWeight = 0; currentBagWeight <= bagMaxLoad; currentBagWeight++) {
+            dpTable[n][currentBagWeight] = 0;
         }
 
-        if (currentIdx == items.length) {
-            // 物品选完了，这个时候能返回的物品价值就是0
-            return new Record(0, 0);
-        }
+        // 从n-1行往前推进填表，因为n行已经处理掉了
+        for (int currentIdx = n - 1; currentIdx >= 0; currentIdx--) {
+            // 背包重量从左到右推进
+            for (int bagWeight = 0; bagWeight <= bagMaxLoad; bagWeight++) {
+                // 选择不要这个物品，返回价值
+                int noValue = dpTable[currentIdx + 1][bagWeight];
 
-        recurseProcess(items, currentIdx + 1, remainderBagLoad);
-        return null;
+                // 选择要这个物品，返回价值
+                int yesValue;
+                if (bagWeight + weights[currentIdx] > bagMaxLoad) {
+                    // 当前背包重量加上要的这个物品的重量超了呀，果断不是有效的放法
+                    // 代码逻辑上讲：bagWeight + weights[currentIdx]的值可能会导致数组越界
+                    yesValue = -1;
+                } else {
+                    yesValue = dpTable[currentIdx + 1][bagWeight + weights[currentIdx]];
+                }
+                // 要这个物品的情况下，如果价值是有效的，那么加上当前这个物品的价值
+                if (yesValue != -1) {
+                    yesValue = yesValue + values[currentIdx];
+                }
+
+                // 要这个物品和不要这个物品两种情况下哪个值大
+                dpTable[currentIdx][bagWeight] = Math.max(noValue, yesValue);
+            }
+        }
+        // (0, 0)位置就是最大价值
+        return dpTable[0][0];
     }
 
-    private static class Record {
-        // 选择物品后的价值
-        private int yesSelectedVal;
-        // 不选择物品后的价值
-        private int noSelectedVal;
-
-        Record(int yesSelectedVal, int noSelectedVal) {
-            this.yesSelectedVal = yesSelectedVal;
-            this.noSelectedVal = noSelectedVal;
+    /**
+     * 获取背包可负载的最大价值
+     * 动态规划的写法
+     *
+     * @param weights    物品重量列表
+     * @param values     物品价值列表
+     * @param bagMaxLoad 背包最大负载重量
+     * @return 背包最大价值
+     */
+    public static int dpWays2(int[] weights, int[] values, int bagMaxLoad) {
+        if (weights == null || values == null || bagMaxLoad <= 0) {
+            return 0;
         }
+        assert weights.length == values.length;
+        int n = weights.length;
+
+        // 动态规划表：行表示当前物品的位置index，列表示当前背包剩余可装载量rest
+        int[][] dpTable = new int[n + 1][bagMaxLoad + 1];
+        // 背包剩余容量为0时，即背包已经装满，此时的价值都是0；也就是第0列的值都是0
+        // 这里不写也没事，因为默认值就是0
+        for (int index = 0; index <= n; index++) {
+            dpTable[index][0] = 0;
+        }
+
+        // 从n-1行往前推进填表，因为n行已经处理掉了
+        for (int currentIndex = n - 1; currentIndex >= 0; currentIndex--) {
+            // 背包剩余重量从左到右推进，rest=0已经处理过了
+            for (int rest = 1; rest <= bagMaxLoad; rest++) {
+                // 选择不要这个物品，返回价值
+                int noValue = dpTable[currentIndex + 1][rest];
+
+                // 要这个物品的情况下，如果价值是有效的，那么加上当前这个物品的价值
+                int yesValue;
+                if (rest - weights[currentIndex] < 0) {
+                    // 当前背包剩余容量减去要的这个物品的重量为负数了，果断不是有效的放法
+                    // 代码逻辑上讲：rest - weights[currentIndex]的值可能会导致数组越界
+                    yesValue = -1;
+                } else {
+                    yesValue = dpTable[currentIndex + 1][rest - weights[currentIndex]];
+                }
+                // 要这个物品的情况下，如果价值是有效的，那么加上当前这个物品的价值
+                if (yesValue != -1) {
+                    yesValue = yesValue + values[currentIndex];
+                }
+
+                // 要这个物品和不要这个物品两种情况下哪个值大
+                dpTable[currentIndex][rest] = Math.max(noValue, yesValue);
+            }
+        }
+        return dpTable[0][bagMaxLoad];
     }
 
     /* ****************************************************************************************************************/
@@ -262,8 +334,7 @@ class MaxValueForBag {
 
     /* 对数器 */
 
-    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
-    public static int dpWay(int[] w, int[] v, int bag) {
+    public static int dpWayForTest(int[] w, int[] v, int bag) {
         int N = w.length;
         int[][] dp = new int[N + 1][bag + 1];
         for (int index = N - 1; index >= 0; index--) {
@@ -294,11 +365,13 @@ class MaxValueForBag {
                 weights[i] = weight;
                 values[i] = value;
             }
-            int max1 = dpWay(weights, values, bagMaxLoad);
+            int max1 = dpWayForTest(weights, values, bagMaxLoad);
             int max2 = getMaxValue1(weights, values, bagMaxLoad);
             int max3 = getMaxValue2(weights, values, bagMaxLoad);
             int max4 = getMaxValue3(weights, values, bagMaxLoad);
-            if (!(max1 == max2 && max2 == max3 && max3 == max4)) {
+            int max5 = dpWays1(weights, values, bagMaxLoad);
+            int max6 = dpWays2(weights, values, bagMaxLoad);
+            if (!(max1 == max2 && max2 == max3 && max3 == max4 && max4 == max5 && max5 == max6)) {
                 System.out.println("Oops!=======weights=" + Arrays.toString(weights)
                         + "----values=" + Arrays.toString(values) + "----bagMaxLoad=" + bagMaxLoad);
             }
@@ -311,13 +384,17 @@ class MaxValueForBag {
         v[0] = 4;
         v[1] = 1;
         int bag = 3;
-        int maxValue = dpWay(w, v, bag);
+        int maxValue = dpWayForTest(w, v, bag);
         System.out.println(maxValue);
         maxValue = getMaxValue1(w, v, bag);
         System.out.println(maxValue);
         maxValue = getMaxValue2(w, v, bag);
         System.out.println(maxValue);
         maxValue = getMaxValue3(w, v, bag);
+        System.out.println(maxValue);
+        maxValue = dpWays1(w, v, bag);
+        System.out.println(maxValue);
+        maxValue = dpWays2(w, v, bag);
         System.out.println(maxValue);
     }
 

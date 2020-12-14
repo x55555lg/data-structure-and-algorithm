@@ -4,7 +4,6 @@ package com.lg.algorithm.violencerecursion.practice.base;
  * @author Xulg
  * Created in 2020-11-26 16:01
  */
-@SuppressWarnings("AlibabaCommentsMustBeJavadocFormat")
 class GetWinnerScore {
 
     /*
@@ -28,41 +27,136 @@ class GetWinnerScore {
         if (cards == null || cards.length == 0) {
             return 0;
         }
+        // 先手玩家的分数
         int firstScore = first(cards, 0, cards.length - 1);
+        // 后手玩家的分数
         int secondScore = second(cards, 0, cards.length - 1);
+        // 赢家的分数
         return Math.max(firstScore, secondScore);
     }
 
-    // 第一个拿牌的玩家，第一个拿牌的玩家要拿对自己最有利的，对方必须取最小的牌
+    // 先手
     private static int first(int[] cards, int left, int right) {
         if (left == right) {
             // 只有一个牌了。没的选了，直接返回
             return cards[left];
         }
 
-        // 第一个拿牌的玩家选择了最左边的牌，那么第二个玩家只能从[left+1, right]上选牌了
+        /*
+         * 先手有2种选择：
+         *  选择左边的牌
+         *  选择右边的牌
+         * 看哪种选择对先手利益最大
+         */
+
+        // 先手拿了左边的牌，然后先手就成为了后手了，只能从[left+1, right]上选牌
         int val1 = cards[left] + second(cards, left + 1, right);
 
-        // 第一个拿牌的玩家选择了最右边的牌，那么第二个玩家只能从[left, right-1]上选牌了
+        // 先手拿了右边的牌，然后先手就成为了后手了，只能从[left, right-1]上选牌
         int val2 = cards[right] + second(cards, left, right - 1);
 
         // 两种情况，取分最大的那个
         return Math.max(val1, val2);
     }
 
-    // 第二个拿牌的玩家
+    // 后手
     private static int second(int[] cards, int left, int right) {
         if (left == right) {
-            // 只有一个牌了，这个牌肯定是先选的人拿的，后选的人拿不到这个牌
+            // 只有一个牌了，这个牌肯定是先手的人拿的，后手的人拿不到这个牌
             return 0;
         }
+
+        /*
+         * 作为后手的时候是没有选择权的，先手肯定会把对他最有利的取走，留下最小的牌给后手
+         * 先手取走左边的牌，先手取走右边的牌，看2种情况哪种留给后手的牌最小
+         */
         int val1 = first(cards, left + 1, right);
         int val2 = first(cards, left, right - 1);
         return Math.min(val1, val2);
     }
 
+    /* ****************************************************************************************************************/
+
+    public static int dp(int[] cards) {
+        if (cards == null || cards.length == 0) {
+            return 0;
+        }
+        int n = cards.length;
+
+        // 先手的动态规划表
+        int[][] firstTable = new int[n][n];
+        // 先手中如果left等于right，那么就去left位置的值
+        for (int idx = 0; idx < n; idx++) {
+            firstTable[idx][idx] = cards[idx];
+        }
+
+        // 后手的动态规划表
+        int[][] secondTable = new int[n][n];
+        // 后手中如果left等于right，那么就是0
+        for (int idx = 0; idx < n; idx++) {
+            secondTable[idx][idx] = 0;
+        }
+
+        /*
+         * int[] cards = {1, 2, 3};
+         * 先手表格：行为left，列为right
+         *         |  0    1    2
+         *     |--------------------            left <= right，所以表格的左下部分是无效的
+         *     | 0 |  1    ?    ?
+         *     |--------------------
+         *     | 1 |  X    2    ?
+         *     |--------------------
+         *     | 2 |  X    X    3
+         *     |--------------------
+         * 后手表格：行为left，列为right
+         *         |  0    1    2
+         *     |--------------------            left <= right，所以表格的左下部分是无效的
+         *     | 0 |  0    ?    ?
+         *     |--------------------
+         *     | 1 |  X    0    ?
+         *     |--------------------
+         *     | 2 |  X    X    0
+         *     |--------------------
+         * 填写2个表格的对角线的值，从已知的对角线开始，向右上方推进
+         */
+
+        // 遍历每一列，第0列已经都有值了，无需处理了
+        for (int index = 1; index < n; index++) {
+            // 行
+            int left = 0;
+            // 列
+            int right = index;
+            // 不能越界
+            while (left < n && right < n) {
+                // 先手拿了左边的牌，然后先手就成为了后手了，只能从[left+1, right]上选牌
+                int firstVal1 = cards[left] + secondTable[left + 1][right];
+                // 先手拿了右边的牌，然后先手就成为了后手了，只能从[left, right-1]上选牌
+                int firstVal2 = cards[right] + secondTable[left][right - 1];
+                // 两种情况，取分最大的那个
+                firstTable[left][right] = Math.max(firstVal1, firstVal2);
+
+                int secondVal1 = firstTable[left + 1][right];
+                int secondVal2 = firstTable[left][right - 1];
+                secondTable[left][right] = Math.min(secondVal1, secondVal2);
+
+                // 去这条对角线的下一个位置
+                left++;
+                right++;
+            }
+        }
+
+        // 赢家的分数
+        return Math.max(firstTable[0][cards.length - 1], secondTable[0][cards.length - 1]);
+    }
+
+    /* ****************************************************************************************************************/
+
     public static void main(String[] args) {
         int winnerScore = getWinnerScore(new int[]{70, 100, 1});
         System.out.println(winnerScore);
+
+        winnerScore = dp(new int[]{70, 100, 1});
+        System.out.println(winnerScore);
     }
+
 }

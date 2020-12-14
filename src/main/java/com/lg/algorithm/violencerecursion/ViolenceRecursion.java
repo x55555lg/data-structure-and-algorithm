@@ -66,6 +66,7 @@ class ViolenceRecursion {
      * n=1，返回1
      * n=2或3，2皇后和3皇后问题无论怎么摆都不行，返回0
      * n=8，返回92
+     *      com.lg.algorithm.violencerecursion.practice.base.QueenN
      */
 
     /*
@@ -78,4 +79,9 @@ class ViolenceRecursion {
      *解决任何面试中的动态规划问题！
      */
 
+    /*
+     *什么暴力递归可以继续优化？
+     *  有重复调用同一个子问题的解，这种递归可以优化
+     *  如果每一个子问题都是不同的解，无法优化也不用优化
+     */
 }
