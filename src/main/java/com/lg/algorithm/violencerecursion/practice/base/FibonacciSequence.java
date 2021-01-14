@@ -21,6 +21,14 @@ class FibonacciSequence {
      *       f(2) = 1;
      */
 
+    /*
+     * 矩阵幂解法
+     * 时间复杂度O(logN)
+     * 矩阵计算斐波那契数列公式：
+     *  F(n)F(n-1) = |F(2)F(1)| * |1 1|^(n-2)
+     *                            |1 0|
+     */
+
     /**
      * 暴力递归解法
      * 时间复杂度：O(2^n)
@@ -94,6 +102,12 @@ class FibonacciSequence {
         // 最终结果
         return dpTable[n];
     }
+
+    public static int calcByMatrix(int n) {
+        return 0;
+    }
+
+    /* ****************************************************************************************************************/
 
     public static void main(String[] args) {
         int times = 1000000;
