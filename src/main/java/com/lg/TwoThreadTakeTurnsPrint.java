@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
  * @author Xulg
  * Created in 2020-09-18 20:48
  */
-class Demo {
+class TwoThreadTakeTurnsPrint {
 
     /**
      * 题目
@@ -38,7 +38,7 @@ class Demo {
                             lock.notifyAll();
                         }
                     }
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 }
                 System.out.println("--------------------------");
             }

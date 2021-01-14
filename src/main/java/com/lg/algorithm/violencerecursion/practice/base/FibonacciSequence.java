@@ -103,8 +103,42 @@ class FibonacciSequence {
         return dpTable[n];
     }
 
+    /**
+     * 矩阵法
+     * 时间复杂度：O(logN)
+     */
     public static int calcByMatrix(int n) {
+        if (n < 1) {
+            return 0;
+        }
+        if (n == 1 || n == 2) {
+            return 1;
+        }
+        // 基础矩阵
+        int[][] base = {{1, 1}, {1, 0}};
+        // TODO: 2021/1/14 矩阵计算
         return 0;
+    }
+
+    /**
+     * A[][] * B[][]
+     * 矩阵乘法
+     * 矩阵之间相乘，必须满足A矩阵列数等于B矩阵行数才能运算
+     * 返回的结果为一个矩阵，行数等于A矩阵的行数、列数等于B矩阵的列数
+     */
+    private static int[][] multiplyMatrix(int[][] m1, int[][] m2) {
+        assert m1 != null && m1.length > 0;
+        assert m2 != null && m2.length > 0;
+        assert m1[0].length == m2.length;
+        int[][] result = new int[m1.length][m2[0].length];
+        for (int i = 0; i < m1.length; i++) {
+            for (int j = 0; j < m2[0].length; j++) {
+                for (int k = 0; k < m2.length; k++) {
+                    result[i][j] += m1[i][k] * m2[k][j];
+                }
+            }
+        }
+        return result;
     }
 
     /* ****************************************************************************************************************/
