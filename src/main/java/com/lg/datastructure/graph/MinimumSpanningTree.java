@@ -126,11 +126,11 @@ class MinimumSpanningTree {
 
         // 将图的所有边按照权重从小到大存入小根堆
         PriorityQueue<Edge> edgeSmallHeap = new PriorityQueue<>((e1, e2) -> e1.weight - e2.weight);
-        // M条边 O(logM)
+        // M条边 O(M*logM)
         edgeSmallHeap.addAll(graph.edges);
 
         Set<Edge> minimumSpanningTree = new HashSet<>();
-        // M条边 O(logM)
+        // M条边 O(M*logM)
         while (!edgeSmallHeap.isEmpty()) {
             Edge edge = edgeSmallHeap.poll();
             // 如果边的两个节点没有连通，则这个边就是最小生成树的边 O(1)

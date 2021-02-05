@@ -53,7 +53,7 @@ class SerializeAndDeserializeBinaryTree {
     }
 
     private static Node doDeserializeTreeByPreLoop(Queue<Integer> serializeQueue) {
-        Integer value = serializeQueue.peek();
+        Integer value = serializeQueue.poll();
         if (value == null) {
             return null;
         } else {

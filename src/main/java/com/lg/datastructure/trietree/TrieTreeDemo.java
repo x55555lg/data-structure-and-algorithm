@@ -84,6 +84,9 @@ class TrieTreeDemo {
      *                          nextNodes.get('a') == null，表示节点没有通向字符'a'的路径
      *                          nextNodes.get('a') != null，表示节点有通向字符'a'的路径
      *          具体实现见代码：com.lg.datastructure.trietree.TrieTree2
+     *=================================================================
+     * Java中TrieTree实现：
+     *  org.apache.commons.collections4.trie.PatriciaTrie
      */
 
     /**

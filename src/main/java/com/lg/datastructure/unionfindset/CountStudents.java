@@ -21,6 +21,7 @@ class CountStudents {
      */
 
     public static int violence(List<Student> students) {
+        // TODO: 2021/1/30 这个解法错误的
         if (students == null || students.isEmpty()) {
             return 0;
         }

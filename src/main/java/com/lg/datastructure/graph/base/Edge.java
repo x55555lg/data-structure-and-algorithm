@@ -29,4 +29,5 @@ public class Edge {
         this.to = to;
         this.weight = weight;
     }
+
 }

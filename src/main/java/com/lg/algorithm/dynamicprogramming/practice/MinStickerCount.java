@@ -115,7 +115,7 @@ class MinStickerCount {
         for (int[] sticker : stickerMap) {
             // 当前遍历到的这个贴纸可不可以用？即这贴纸中是否至少包含一种剩余字符串中的字符
             // 如果这个贴纸用不了，直接pass
-            // 这里可以优化成值判断首字符
+            // 这里可以优化成只判断首字符
             if (canNotUseTheSticker(sticker, restStr)) {
                 continue;
             }
