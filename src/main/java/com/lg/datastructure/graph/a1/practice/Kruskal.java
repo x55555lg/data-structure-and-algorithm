@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  * @author Xulg
- * Created in 2021-02-03 11:17
+ * Creat ed in 2021-02-03 11:17
  */
 @SuppressWarnings("all")
 class Kruskal {

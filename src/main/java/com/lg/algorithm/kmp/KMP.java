@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -18,7 +19,50 @@ class KMP {
 
     /*
      * KMP算法实现思路
+     *---------------------------------------------------------------------
+     *str串和match串如下
+     * str      ... a   a   b   a   a   c   a   a   b   a   a   c ...
+     *              i
+     *              |
+     * match        a   a   b   a   a   c   a   a   b   a   a   t
+     *              0   1   2   3   4   5   6   7   8   9   10  11
+     *              |
+     *---------------------------------------------------------------------
+     *生成match串的next数组
+     * next        -1   0   X   X   X   X   X   X   X   X   X   X
+     *              0   1   2   3   4   5   6   7   8   9   10  11
+     *              next[0]位置固定为-1
+     *              next[1]位置固定为0
+     *              next[2]位置比较特殊，不是0就是1
+     * next[i]的含义：
+     *              表示任意位置i，在match串的[0, i-1]范围上的最长前缀后缀相等的长度
+     *              例如：next[11]位置，在match串[0, 10]范围上的最长前缀是aabaa，最长后缀是aabaa，
+     *                    所有最长长度为5，即next[11] = 5。
+     *                    (a   a   b   a   a)   c   [a   a   b   a   a]   t
+     *                     0   1   2   3   4    5    6   7   8   9   10   11
+     * 完整的next数组：
+     * next        { -1   0   1   0   1   2   0   1   2   3   4   5 }
+     *                0   1   2   3   4   5   6   7   8   9   10  11
+     *如何高效的求出next数组？
+     * 用前一个位置的值求当前位置，类似动态规划的思想
+     *---------------------------------------------------------------------
+     *字符串比较，str串从i位置开始，match串从0位置开始
+     * str      ... a   a   b   a   a   c   a   a   b   a   a   c ...
+     *              i                                           j
+     *                                                          |       strIdx
      *
+     * match        a   a   b   a   a   c   a   a   b   a   a   t
+     *              0   1   2   3   4   5   6   7   8   9   10  11
+     *                                                          |       matchIdx
+     *                                                                  跳转
+     *                                  |                               matchIdx
+     * next        -1   0   1   0   1   2   0   1   2   3   4   5
+     *              0   1   2   3   4   5   6   7   8   9   10  11
+     * 比较到str[j]和match[11]位置的字符不相等，即 'c' != 't'
+     * matchIdx指针可以跳转到next[11]=5位置，
+     * 然后str串继续从j位置，match串从5位置开始继续比较，直到其中一个串越界为止。
+     * 若match串越界了，说明比较出结果了，strIdx-matchIdx就是最终结果；
+     * 其他情况都是未能匹配到，返回-1。
      */
 
     /**
@@ -190,6 +234,7 @@ class KMP {
 
     public static void main(String[] args) {
         Map<Integer, Integer> map = new HashMap<>();
+        HashSet<Integer> set = new HashSet<>();
         int possibilities = 5;
         int strSize = 20;
         int matchSize = 5;
@@ -208,8 +253,21 @@ class KMP {
             if (r1 != r2) {
                 System.out.println("Oops!");
             }
+            {
+                int[] nextArray = getNextArray(match);
+                if (nextArray.length >= 3) {
+                    set.add(nextArray[2]);
+                } else {
+                    set.add(Integer.MAX_VALUE);
+                }
+            }
         }
         System.out.println("test finish");
+
+        {
+            int[] nextArray = getNextArray("aabaacaabaat");
+            System.out.println(Arrays.toString(nextArray));
+        }
     }
 
 }

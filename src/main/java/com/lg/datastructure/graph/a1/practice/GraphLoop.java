@@ -88,6 +88,10 @@ class GraphLoop {
         // 标记节点已经入栈
         HashSet<Node> recordedNodes = new HashSet<>();
         recordedNodes.add(node);
+
+        // 打印
+        System.out.println(node.value);
+
         while (!stack.isEmpty()) {
             // 先从栈中弹出节点
             Node temp = stack.pop();

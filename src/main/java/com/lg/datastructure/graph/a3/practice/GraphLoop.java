@@ -1,4 +1,4 @@
-package com.lg.datastructure.graph.a1.practice;
+package com.lg.datastructure.graph.a3.practice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,51 +8,56 @@ import java.util.Queue;
 import java.util.Stack;
 
 /**
+ * 图的遍历
+ * BFS
+ * DFS
+ *
  * @author Xulg
- * Created in 2021-02-03 9:33
+ * Created in 2021-02-15 20:43
  */
-@SuppressWarnings({"MapOrSetKeyShouldOverrideHashCodeEquals", "MismatchedQueryAndUpdateOfCollection"})
-class GraphLoop2 {
+@SuppressWarnings("MapOrSetKeyShouldOverrideHashCodeEquals")
+class GraphLoop {
 
-    /***
-     * 广度优先遍历
-     */
     public static void bfs(Node node) {
-        HashSet<Node> recordedNodes = new HashSet<>();
-        recordedNodes.add(node);
+        if (node == null) {
+            return;
+        }
+        HashSet<Node> visitedNodes = new HashSet<>();
+        visitedNodes.add(node);
         Queue<Node> queue = new LinkedList<>();
         queue.add(node);
         while (!queue.isEmpty()) {
             Node temp = queue.poll();
             System.out.println(temp.value);
             for (Node nextNode : temp.nexts) {
-                if (!recordedNodes.contains(nextNode)) {
-                    recordedNodes.add(nextNode);
+                if (!visitedNodes.contains(nextNode)) {
+                    visitedNodes.add(nextNode);
                     queue.add(nextNode);
                 }
             }
         }
     }
 
-    /**
-     * 深度优先遍历
-     */
+    // 时间久了忘了
     public static void dfs(Node node) {
-        HashSet<Node> recordedNodes = new HashSet<>();
-        recordedNodes.add(node);
+        if (node == null) {
+            return;
+        }
+
+        HashSet<Node> visitedNodes = new HashSet<>();
+        visitedNodes.add(node);
         Stack<Node> stack = new Stack<>();
         stack.add(node);
 
-        // 打印
+        // print
         System.out.println(node.value);
-
         while (!stack.isEmpty()) {
-            Node currentNode = stack.pop();
-            for (Node nextNode : currentNode.nexts) {
-                if (!recordedNodes.contains(nextNode)) {
-                    stack.push(currentNode);
+            Node current = stack.pop();
+            for (Node nextNode : current.nexts) {
+                if (!visitedNodes.contains(nextNode)) {
+                    visitedNodes.add(nextNode);
+                    stack.push(current);
                     stack.push(nextNode);
-                    recordedNodes.add(nextNode);
                     System.out.println(nextNode.value);
                     break;
                 }
@@ -60,16 +65,11 @@ class GraphLoop2 {
         }
     }
 
-    /* ****************************************************************************************************************/
-    /* ****************************************************************************************************************/
-    /* ****************************************************************************************************************/
-
     private static class Node {
         int value;
         int in;
         int out;
         ArrayList<Node> nexts;
-        // 从当前节点出发的边有哪些
         ArrayList<Edge> edges;
 
         Node(int value) {

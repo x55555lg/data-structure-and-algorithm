@@ -74,6 +74,9 @@ class GraphLoop {
         // 第一个节点记录为已入栈过了
         recordSet.add(node);
 
+        // 打印
+        System.out.println(node.value);
+
         while (!stack.isEmpty()) {
             // 先从栈中弹出节点
             Node current = stack.pop();

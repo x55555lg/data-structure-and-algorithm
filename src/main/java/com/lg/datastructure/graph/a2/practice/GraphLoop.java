@@ -1,4 +1,4 @@
-package com.lg.datastructure.graph.a1.practice;
+package com.lg.datastructure.graph.a2.practice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,37 +9,38 @@ import java.util.Stack;
 
 /**
  * @author Xulg
- * Created in 2021-02-03 9:33
+ * Created in 2021-02-07 20:21
  */
-@SuppressWarnings({"MapOrSetKeyShouldOverrideHashCodeEquals", "MismatchedQueryAndUpdateOfCollection"})
-class GraphLoop2 {
+@SuppressWarnings("MapOrSetKeyShouldOverrideHashCodeEquals")
+class GraphLoop {
 
-    /***
-     * 广度优先遍历
-     */
     public static void bfs(Node node) {
-        HashSet<Node> recordedNodes = new HashSet<>();
-        recordedNodes.add(node);
+        if (node == null) {
+            return;
+        }
+        HashSet<Node> visitedNodes = new HashSet<>();
+        visitedNodes.add(node);
         Queue<Node> queue = new LinkedList<>();
         queue.add(node);
         while (!queue.isEmpty()) {
             Node temp = queue.poll();
             System.out.println(temp.value);
             for (Node nextNode : temp.nexts) {
-                if (!recordedNodes.contains(nextNode)) {
-                    recordedNodes.add(nextNode);
+                if (!visitedNodes.contains(nextNode)) {
                     queue.add(nextNode);
+                    visitedNodes.add(nextNode);
                 }
             }
         }
     }
 
-    /**
-     * 深度优先遍历
-     */
     public static void dfs(Node node) {
-        HashSet<Node> recordedNodes = new HashSet<>();
-        recordedNodes.add(node);
+        if (node == null) {
+            return;
+        }
+
+        HashSet<Node> visitedNodes = new HashSet<>();
+        visitedNodes.add(node);
         Stack<Node> stack = new Stack<>();
         stack.add(node);
 
@@ -47,13 +48,13 @@ class GraphLoop2 {
         System.out.println(node.value);
 
         while (!stack.isEmpty()) {
-            Node currentNode = stack.pop();
-            for (Node nextNode : currentNode.nexts) {
-                if (!recordedNodes.contains(nextNode)) {
-                    stack.push(currentNode);
+            Node temp = stack.pop();
+            for (Node nextNode : temp.nexts) {
+                if (!visitedNodes.contains(nextNode)) {
+                    stack.push(temp);
                     stack.push(nextNode);
-                    recordedNodes.add(nextNode);
-                    System.out.println(nextNode.value);
+                    visitedNodes.add(nextNode);
+                    System.out.println(temp.value);
                     break;
                 }
             }
@@ -69,11 +70,10 @@ class GraphLoop2 {
         int in;
         int out;
         ArrayList<Node> nexts;
-        // 从当前节点出发的边有哪些
         ArrayList<Edge> edges;
 
-        Node(int value) {
-            this.value = value;
+        Node(int val) {
+            value = val;
             in = 0;
             out = 0;
             nexts = new ArrayList<>();
@@ -102,5 +102,4 @@ class GraphLoop2 {
             edges = new HashSet<>();
         }
     }
-
 }
