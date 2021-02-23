@@ -140,11 +140,11 @@ class MaxPartyHappyValue {
             return null;
         }
         Employee boss = new Employee((int) (Math.random() * (maxHappy + 1)));
-        genarateNexts(boss, 1, maxLevel, maxNexts, maxHappy);
+        generateNexts(boss, 1, maxLevel, maxNexts, maxHappy);
         return boss;
     }
 
-    private static void genarateNexts(Employee e, int level, int maxLevel, int maxNexts, int maxHappy) {
+    private static void generateNexts(Employee e, int level, int maxLevel, int maxNexts, int maxHappy) {
         if (level > maxLevel) {
             return;
         }
@@ -152,7 +152,7 @@ class MaxPartyHappyValue {
         for (int i = 0; i < nextsSize; i++) {
             Employee next = new Employee((int) (Math.random() * (maxHappy + 1)));
             e.subordinates.add(next);
-            genarateNexts(next, level + 1, maxLevel, maxNexts, maxHappy);
+            generateNexts(next, level + 1, maxLevel, maxNexts, maxHappy);
         }
     }
 

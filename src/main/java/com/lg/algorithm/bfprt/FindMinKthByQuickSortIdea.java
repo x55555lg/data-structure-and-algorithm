@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author Xulg
  * Created in 2021-02-06 9:43
  */
-class FindMinKth {
+class FindMinKthByQuickSortIdea implements FindMinKth2 {
 
     /*
      * 在一个数组int[] arr中，查找第k小的数
@@ -38,10 +38,6 @@ class FindMinKth {
      *          index位置在等于区equalsZone右边，即index > equalsZone[1]
      *              在arr[equalsZone[1]+1, R]上继续分区操作，重复步骤2
      *      3.如果 L == R，那么index一定和L，R相等，此时arr[index]就是第k小的值
-     *
-     *-------------------------------------
-     * bfprt算法解
-     *...
      */
 
     /* ******************************************************************************************************/
@@ -55,7 +51,8 @@ class FindMinKth {
      * @param k   the k
      * @return the min kth value
      */
-    public static int getMinKth(int[] arr, int k) {
+    @Override
+    public int getMinKth(int[] arr, int k) {
         assert arr != null && arr.length > 0 : "what the hell?";
         assert k >= 1 && k <= arr.length : "what the hell?";
         return processRecurse(arr, 0, arr.length - 1, k - 1);
@@ -174,13 +171,14 @@ class FindMinKth {
         }
 
         {
+            FindMinKth2 findMinKth = new FindMinKthByQuickSortIdea();
             int times = 1000000;
             for (int time = 0; time < times; time++) {
                 int length = RandomUtil.randomInt(1, 11);
                 int[] arr = generateIntArray(length);
                 int k = RandomUtil.randomInt(1, arr.length + 1);
                 int r = getMinKthForCompare(arr.clone(), k);
-                int r1 = getMinKth(arr.clone(), k);
+                int r1 = findMinKth.getMinKth(arr.clone(), k);
                 if (!(r == r1)) {
                     System.out.println("Oops");
                 }
@@ -188,5 +186,4 @@ class FindMinKth {
             System.out.println("finish!");
         }
     }
-
 }

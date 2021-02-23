@@ -54,7 +54,7 @@ class GreedyAlgorithm {
      *      void recurse(Object[] array, Object 排列结果, List<Object> 存放排列结果的集合) {
      *          if (退出条件) {
      *              存放排列结果的集合.add(排列结果);
-     *          } else{
+     *          } else {
      *              for (int idx = 0; idx < array.length; idx++) {
      *                 新的排列结果 = 排列结果 + array[idx];
      *                 Object[] remainArray = array减掉这个已经用了的元素;
@@ -66,7 +66,7 @@ class GreedyAlgorithm {
      *      void recurse(Object[] array, List<Object> 已使用元素集合, Object 排列结果, List<Object> 存放排列结果的集合) {
      *          if (退出条件) {
      *              存放排列结果的集合.add(排列结果);
-     *          } else{
+     *          } else {
      *              for (int idx = 0; idx < array.length; idx++) {
      *                  // 元素必须得是没使用过的
      *                  if (!已使用元素集合.contains(array[i])) {
