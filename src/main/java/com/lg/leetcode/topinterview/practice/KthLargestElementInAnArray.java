@@ -99,6 +99,7 @@ class KthLargestElementInAnArray {
      */
     @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
     private static class BFPRT {
+
         public static int findKthLargest(int[] nums, int k) {
             return bfprt(nums, 0, nums.length - 1, k - 1);
         }
