@@ -20,4 +20,10 @@ public class Application {
      *      6.当样本数量很多时比对结果依然正确，可以确定方法a已经正确。
      */
 
+    /*
+     * 算法学习的工具网站
+     * https://www.geeksforgeeks.org/
+     * https://visualgo.net/zh
+     * https://www.cs.usfca.edu/~galles/visualization/Algorithms.html
+     */
 }

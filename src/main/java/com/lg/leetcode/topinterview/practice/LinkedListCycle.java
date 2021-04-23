@@ -60,4 +60,5 @@ class LinkedListCycle {
         int val;
         ListNode next;
     }
+
 }

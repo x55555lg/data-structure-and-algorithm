@@ -25,7 +25,7 @@ class KthLargestElementInAnArray {
      *
      * Note: You may assume k is always valid, 1 ≤ k ≤ array's length.
      *------------------------------------------------------------------
-     * 在数组中找第k大的树(类似于在数组中找到第k小的数)
+     * 在数组中找第k大的数(类似于在数组中找到第k小的数)
      */
 
     /**

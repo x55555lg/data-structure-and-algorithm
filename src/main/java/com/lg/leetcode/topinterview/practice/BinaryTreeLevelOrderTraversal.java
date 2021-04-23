@@ -146,7 +146,7 @@ class BinaryTreeLevelOrderTraversal {
         if (levelMap.containsKey(level)) {
             levelMap.get(level).add(treeNode.val);
         } else {
-            levelMap.put(level, new ArrayList<>(Collections.singleton(treeNode.val)));
+            levelMap.put(level, new ArrayList<>(Collections.singletonList(treeNode.val)));
         }
         recurse(treeNode.left, level + 1, levelMap);
         recurse(treeNode.right, level + 1, levelMap);

@@ -11,4 +11,25 @@ class Demo {
      * https://leetcode.com/problemset/top-interview-questions/
      */
 
+    /*
+     * 不会的题
+     *  BasicCalculatorII
+     *  ConstructBinaryTreeFromPreorderAndInorderTraversal
+     *  CountOfSmallerNumbersAfterSelf
+     *  FindMedianFromDataStream
+     *  GasStation
+     *  IntersectionOfTwoArrays2
+     *  JumpGame
+     *  LargestRectangleInHistogram
+     *  PlusOne
+     *  RemoveDuplicatesFromSortedArray
+     * 待优化的题
+     *  CoinChange
+     *  ContainerWithMostWater
+     *  RotateArray
+     *  ShuffleAnArray
+     *  SortList
+     *  ThreeSum
+     *  ValidPalindrome
+     */
 }

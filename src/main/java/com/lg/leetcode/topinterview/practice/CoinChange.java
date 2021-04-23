@@ -195,6 +195,13 @@ class CoinChange {
 
     }
 
+    private static class Best {
+        // TODO: 2021/2/26 最优解 使用一维数组DP
+        public static int coinChange(int[] coins, int amount) {
+            return -1;
+        }
+    }
+
     public static void main(String[] args) {
         int[] coins = {1, 2, 5};
         int amount = 11;
