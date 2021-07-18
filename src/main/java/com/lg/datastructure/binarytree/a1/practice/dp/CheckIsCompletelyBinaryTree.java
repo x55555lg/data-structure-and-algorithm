@@ -108,35 +108,33 @@ class CheckIsCompletelyBinaryTree {
         if (isFull) {
             // 当前树是满二叉树了，那么就一定是完全二叉树了啊
             isCompletely = true;
-        } else if (leftData.isFull && rightData.isFull) {
-            /*
-             * 左子树             右子树                   什么情况
-             * 满二叉树           满二叉树                 左子树高度比右子树高度大1时，X为头节点的树才是完全二叉树
-             */
-            isCompletely = leftData.high - rightData.high == 1;
-        } else if (leftData.isCompletely && rightData.isFull) {
-            /*
-             * 左子树             右子树                   什么情况
-             * 完全二叉树         满二叉树                 左子树高度比右子树高度大1时，X为头节点的树才是完全二叉树
-             */
-            isCompletely = leftData.high - rightData.high == 1;
-        } else if (leftData.isFull && rightData.isCompletely) {
-            /*
-             * 左子树             右子树                   什么情况
-             * 满二叉树           完全二叉树               左右子树高度相等时，X为头节点的树才是完全二叉树
-             */
-            isCompletely = leftData.high == rightData.high;
-        } else if (leftData.isCompletely && rightData.isCompletely) {
-            /*
-             * 左子树             右子树                   什么情况
-             * 完全二叉树         完全二叉树               X为头节点的树一定不是完全二叉树
-             */
-            isCompletely = false;
         } else {
-            // 其余情况都不是
-            isCompletely = false;
+            if (!leftData.isCompletely || !rightData.isCompletely) {
+                // 左右子树有一个不是完全二叉树，则肯定不是
+                isCompletely = false;
+            } else if (leftData.isFull && rightData.isFull) {
+                /*
+                 * 左子树             右子树                   什么情况
+                 * 满二叉树           满二叉树                 左子树高度比右子树高度大1时，X为头节点的树才是完全二叉树
+                 */
+                isCompletely = leftData.high - rightData.high == 1;
+            } else if (leftData.isCompletely && rightData.isFull) {
+                /*
+                 * 左子树             右子树                   什么情况
+                 * 完全二叉树         满二叉树                 左子树高度比右子树高度大1时，X为头节点的树才是完全二叉树
+                 */
+                isCompletely = leftData.high - rightData.high == 1;
+            } else if (leftData.isFull && rightData.isCompletely) {
+                /*
+                 * 左子树             右子树                   什么情况
+                 * 满二叉树           完全二叉树               左右子树高度相等时，X为头节点的树才是完全二叉树
+                 */
+                isCompletely = leftData.high == rightData.high;
+            } else {
+                // 其余情况都不是
+                isCompletely = false;
+            }
         }
-
         // 当前树的信息
         return new Data(high, isFull, isCompletely);
     }

@@ -1,5 +1,8 @@
 package com.lg.leetcode.topinterview.practice;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ClassPathResource;
+
 import java.util.Arrays;
 
 /**
@@ -49,13 +52,16 @@ class LargestRectangleInHistogram {
 
         private static int recurse(int[] arr, int curIdx) {
             // base case
-            if (curIdx == arr.length) {
-                return 0;
+            if (curIdx == arr.length - 1) {
+                // 最后一个柱子，柱子本身就是最大面积
+                return arr[curIdx];
             }
             int curMax = arr[curIdx];
+            int minHeight = arr[curIdx];
             for (int idx = curIdx + 1; idx < arr.length; idx++) {
                 // [curIdx, idx]上最小height是多少
-                int minHeight = getMinHeight(arr, curIdx, idx);
+                //int minHeight = getMinHeight(arr, curIdx, idx);
+                minHeight = Math.min(minHeight, arr[idx]);
                 // [curIdx, idx]上的最大面积
                 int rectangleArea = (idx - curIdx + 1) * minHeight;
                 curMax = Math.max(rectangleArea, curMax);
@@ -90,14 +96,16 @@ class LargestRectangleInHistogram {
                 return table[curIdx];
             }
             // base case
-            if (curIdx == arr.length) {
-                table[curIdx] = 0;
-                return 0;
+            if (curIdx == arr.length - 1) {
+                table[curIdx] = arr[curIdx];
+                return table[curIdx];
             }
             int curMax = arr[curIdx];
+            int minHeight = arr[curIdx];
             for (int idx = curIdx + 1; idx < arr.length; idx++) {
                 // [curIdx, idx]上最小height是多少
-                int minHeight = getMinHeight(arr, curIdx, idx);
+                //int minHeight = getMinHeight(arr, curIdx, idx);
+                minHeight = Math.min(minHeight, arr[idx]);
                 // [curIdx, idx]上的最大面积
                 int rectangleArea = (idx - curIdx + 1) * minHeight;
                 curMax = Math.max(rectangleArea, curMax);
@@ -123,15 +131,17 @@ class LargestRectangleInHistogram {
     private static class DP {
 
         public static int largestRectangleArea(int[] heights) {
-            int[] table = new int[heights.length + 1];
-            // base case
-            table[heights.length] = 0;
+            int[] table = new int[heights.length];
+            // base case 最后一个柱子，柱子本身就是最大面积
+            table[heights.length - 1] = heights[heights.length - 1];
             // 填表
-            for (int curIdx = heights.length - 1; curIdx >= 0; curIdx--) {
+            for (int curIdx = heights.length - 2; curIdx >= 0; curIdx--) {
                 int curMax = heights[curIdx];
+                int minHeight = heights[curIdx];
                 for (int idx = curIdx + 1; idx < heights.length; idx++) {
                     // [curIdx, idx]上最小height是多少
-                    int minHeight = getMinHeight(heights, curIdx, idx);
+                    //int minHeight = getMinHeight(heights, curIdx, idx);
+                    minHeight = Math.min(minHeight, heights[idx]);
                     // [curIdx, idx]上的最大面积
                     int rectangleArea = (idx - curIdx + 1) * minHeight;
                     // 留最大的面积情况
@@ -157,8 +167,27 @@ class LargestRectangleInHistogram {
         int largestRectangleArea = MemorySearch.largestRectangleArea(arr);
         System.out.println(largestRectangleArea);
 
+        largestRectangleArea = BruteForce.largestRectangleArea(arr);
+        System.out.println(largestRectangleArea);
+
+        largestRectangleArea = DP.largestRectangleArea(arr);
+        System.out.println(largestRectangleArea);
+
         arr = new int[]{2, 4};
         largestRectangleArea = MemorySearch.largestRectangleArea(arr);
+        System.out.println(largestRectangleArea);
+
+        largestRectangleArea = BruteForce.largestRectangleArea(arr);
+        System.out.println(largestRectangleArea);
+
+        largestRectangleArea = DP.largestRectangleArea(arr);
+        System.out.println(largestRectangleArea);
+
+        largestRectangleArea = BruteForce.largestRectangleArea(new int[]{3});
+        System.out.println(largestRectangleArea);
+
+        arr = Arrays.stream(FileUtil.readUtf8String(new ClassPathResource("data.txt").getFile()).split(",")).mapToInt(Integer::valueOf).toArray();
+        largestRectangleArea = DP.largestRectangleArea(arr);
         System.out.println(largestRectangleArea);
     }
 

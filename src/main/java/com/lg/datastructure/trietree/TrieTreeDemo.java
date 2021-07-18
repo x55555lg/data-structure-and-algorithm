@@ -30,7 +30,7 @@ class TrieTreeDemo {
      *                                  ○
      *                                ╱ ╲
      *                              ╱	   ╲
-     *                            a	      b
+     *                            a	          b
      *                          ╱			   ╲
      *                        ╱				 ╲
      *                       ○{pass: 2, end:0}	   ○{pass: 1, end:0}

@@ -52,4 +52,34 @@ class GasStation {
         // TODO: 2021/2/26 贪心算法
         return 0;
     }
+
+    private static class BruteForce {
+        public static int canCompleteCircuit(int[] gas, int[] cost) {
+            if (gas == null || cost == null || gas.length != cost.length) {
+                return -1;
+            }
+            int n = gas.length;
+            for (int i = 0; i < n; i++) {
+                int remain = gas[i];
+                for (int j = i + 1; j < n; j++) {
+                    if (remain > 0) {
+                        if (remain + gas[j] - cost[j] > 0) {
+                            remain = remain + gas[j] - cost[j];
+                        } else {
+                            // 这个idx位置不行
+                            break;
+                        }
+                    } else {
+                        if (gas[j] - cost[j] > 0) {
+                            remain = gas[j] - cost[j];
+                        } else {
+                            // 这个idx位置不行
+                            break;
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+    }
 }

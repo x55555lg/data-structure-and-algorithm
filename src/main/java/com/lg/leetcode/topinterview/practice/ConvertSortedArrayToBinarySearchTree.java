@@ -44,9 +44,11 @@ class ConvertSortedArrayToBinarySearchTree {
      */
 
     public static TreeNode sortedArrayToBST(int[] nums) {
-        return build(nums);
+        return build2(nums);
     }
 
+    // 错误的
+    @Deprecated
     private static TreeNode build(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;
@@ -74,6 +76,63 @@ class ConvertSortedArrayToBinarySearchTree {
         return root;
     }
 
+    // 错误的
+    @Deprecated
+    private static TreeNode build2(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
+        }
+        TreeNode root = null;
+        for (int idx = 0; idx < arr.length; idx++) {
+            int val = arr[idx];
+            if (root == null) {
+                root = new TreeNode(val);
+            } else {
+                TreeNode parentNode = null;
+                TreeNode treeNode = root;
+                while (treeNode != null) {
+                    parentNode = treeNode;
+                    if (treeNode.val > val) {
+                        treeNode = treeNode.left;
+                    } else {
+                        // treeNode.val < val
+                        treeNode = treeNode.right;
+                    }
+                }
+                if (parentNode.val > val) {
+                    parentNode.left = new TreeNode(val);
+                } else {
+                    parentNode.right = new TreeNode(val);
+                }
+            }
+        }
+        return root;
+    }
+
+    private static class Recurse {
+        public static TreeNode build(int[] arr) {
+            if (arr == null || arr.length == 0) {
+                return null;
+            }
+            return recurse(arr, 0, arr.length - 1);
+        }
+
+        private static TreeNode recurse(int[] arr, int left, int right) {
+            // base case
+            if (left > right) {
+                return null;
+            }
+            // 中间位置
+            int mid = left + ((right - left) >> 1);
+            TreeNode node = new TreeNode(arr[mid]);
+            // 中间位置左边的数一定是比当前的数要小
+            node.left = recurse(arr, left, mid - 1);
+            // 中间位置右边的数一定是比当前的数要大
+            node.right = recurse(arr, mid + 1, right);
+            return node;
+        }
+    }
+
     private static class TreeNode {
         int val;
         TreeNode left;
@@ -81,6 +140,11 @@ class ConvertSortedArrayToBinarySearchTree {
 
         TreeNode(int val) {
             this.val = val;
+        }
+
+        @Override
+        public String toString() {
+            return "TreeNode{" + "val=" + val + '}';
         }
     }
 

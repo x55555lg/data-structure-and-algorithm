@@ -113,7 +113,10 @@ class CheckIsCompletelyBinaryTree {
             isCompletely = true;
         } else {
             /* 当前的树不是满二叉树了 */
-            if (leftInfo.isCompletely && rightInfo.isFull) {
+            if (!leftInfo.isCompletely || !rightInfo.isCompletely) {
+                // 左右子树有一个不是完全二叉树，则肯定不是
+                isCompletely = false;
+            } else if (leftInfo.isCompletely && rightInfo.isFull) {
                 // 左子树是完全二叉树，右子树是满二叉树，只有左子树高度比右子树高度大1时，X为头节点的树才是完全二叉树
                 isCompletely = leftInfo.treeHigh - 1 == rightInfo.treeHigh;
             } else if (leftInfo.isFull && rightInfo.isCompletely) {
@@ -269,4 +272,5 @@ class CheckIsCompletelyBinaryTree {
         }
         System.out.println("finish!");
     }
+
 }

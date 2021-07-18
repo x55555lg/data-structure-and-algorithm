@@ -1,5 +1,10 @@
 package com.lg;
 
+import cn.hutool.core.date.DateTime;
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.util.Date;
+
 /**
  * 数据结构和算法学习
  *
@@ -26,4 +31,9 @@ public class Application {
      * https://visualgo.net/zh
      * https://www.cs.usfca.edu/~galles/visualization/Algorithms.html
      */
+
+    public static void main(String[] args) {
+        Date date = DateUtils.addDays(new Date(), 21);
+        System.out.println(DateTime.of(date).toString());
+    }
 }

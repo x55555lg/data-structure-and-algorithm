@@ -100,7 +100,7 @@ class NQueenProblem {
                 return false;
             }
             // 两个点如果是对角线的话，那么两个点的行列差值是相等的
-            if (Math.abs(line - column) == Math.abs(l - record[l])) {
+            if (Math.abs(line - l) == Math.abs(column - record[l])) {
                 // 同对角线了
                 return false;
             }
@@ -162,7 +162,19 @@ class NQueenProblem {
         count = getQueen(12);
         System.out.println(count);
 
-        count = getQueen(32);
-        System.out.println(count);
+        if (false) {
+            count = getQueen(32);
+            System.out.println(count);
+        }
+
+        for (int n = 0; n < 32; n++) {
+            int r0 = num2(n);
+            int r1 = getQueen(n);
+            if (r0 != r1) {
+                System.out.println("fucking---->n=" + n + " r0=" + r0 + " r1=" + r1);
+            }
+        }
+        System.out.println("good job");
     }
+
 }

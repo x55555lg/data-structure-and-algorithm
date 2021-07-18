@@ -64,10 +64,12 @@ class WordSearch {
             if (board.length * board[0].length < word.length()) {
                 return false;
             }
+            char[] chars = word.toCharArray();
+            boolean[][] usedPosition = new boolean[board.length][board[0].length];
             for (int x = 0; x < board.length; x++) {
                 for (int y = 0; y < board[x].length; y++) {
-                    if (word.startsWith("" + board[x][y])) {
-                        boolean[][] usedPosition = new boolean[board.length][board[0].length];
+                    if (chars[0] == board[x][y]) {
+                        //if (word.startsWith("" + board[x][y])) {
                         if (recurse(board, word, x, y, usedPosition)) {
                             return true;
                         }
@@ -79,16 +81,16 @@ class WordSearch {
 
         // 从(boardX, boardY)位置出发，是否存在一条路径可以减完目标字符串
         // usedPosition记录board上某位置的字符有没有使用过
-        private static boolean recurse(char[][] board, String restWord,
-                                       int boardX, int boardY, boolean[][] usedPosition) {
+        private static boolean recurse(char[][] board, String restWord, int boardX, int boardY, boolean[][] usedPosition) {
             if (boardX < 0 || boardX >= board.length || boardY < 0 || boardY >= board[0].length) {
-                // 越界了已经，看看还有没有剩余的字符串
-                return restWord.isEmpty();
+                // 越界了已经
+                return false;
             }
-            if ("".equals(restWord)) {
+            if (restWord.length() == 0) {
+                // 字符串剪完了
                 return true;
             }
-            if (!restWord.startsWith("" + board[boardX][boardY])) {
+            if (restWord.charAt(0) != board[boardX][boardY]) {
                 // 剩余字符串没有目标字符，这条路肯定不通
                 return false;
             }
@@ -98,11 +100,20 @@ class WordSearch {
             }
 
             // 减掉目标字符，得到剩余的字符串
-            String newRestWord = restWord.replaceFirst("" + board[boardX][boardY], "");
-            if ("".equals(newRestWord)) {
+            //String newRestWord = restWord.replaceFirst("" + board[boardX][boardY], "");
+
+            char[] chars = restWord.toCharArray();
+            char[] newChars = new char[chars.length - 1];
+            int targetIdx = restWord.indexOf(board[boardX][boardY]);
+            System.arraycopy(chars, 0, newChars, 0, targetIdx);
+            System.arraycopy(chars, targetIdx + 1, newChars, targetIdx, newChars.length - targetIdx);
+            String newRestWord = new String(newChars);
+
+            if (newRestWord.length() == 0) {
                 // 减完了，提前结束
                 return true;
             }
+
             // 标记字符已经使用了
             usedPosition[boardX][boardY] = true;
 

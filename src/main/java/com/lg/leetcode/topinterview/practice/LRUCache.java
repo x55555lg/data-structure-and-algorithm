@@ -1,10 +1,11 @@
 package com.lg.leetcode.topinterview.practice;
 
+import java.util.HashMap;
+
 /**
  * @author Xulg
  * Created in 2021-03-09 9:01
  */
-@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 class LRUCache {
 
     /*
@@ -49,18 +50,115 @@ class LRUCache {
 
     private static class LRU {
 
-        private final int limit;
+        private final HashMap<Integer, Node<Integer, Integer>> keyNodeMap;
+        private final DoubleLinkedList<Integer, Integer> doubleLinkedList;
+        private final int capacity;
 
         public LRU(int capacity) {
-            this.limit = capacity;
+            this.capacity = capacity;
+            keyNodeMap = new HashMap<>(capacity * 4 / 3 + 1);
+            doubleLinkedList = new DoubleLinkedList<>();
         }
 
         public int get(int key) {
+            if (keyNodeMap.containsKey(key)) {
+                Node<Integer, Integer> node = keyNodeMap.get(key);
+                doubleLinkedList.moveNodeToTail(node);
+                return node.value == null ? -1 : node.value;
+            }
+            // not found
             return -1;
         }
 
         public void put(int key, int value) {
+            if (keyNodeMap.containsKey(key)) {
+                // update the value
+                Node<Integer, Integer> node = keyNodeMap.get(key);
+                node.value = value;
+                doubleLinkedList.moveNodeToTail(node);
+            } else {
+                // add the key value
+                Node<Integer, Integer> newNode = new Node<>(key, value);
+                doubleLinkedList.addNodeToTail(newNode);
+                keyNodeMap.put(key, newNode);
 
+                // remove the most unused cache if necessary
+                if (keyNodeMap.size() > capacity) {
+                    Node<Integer, Integer> mostUnusedCache = doubleLinkedList.removeHead();
+                    if (mostUnusedCache != null) {
+                        keyNodeMap.remove(mostUnusedCache.key);
+                    }
+                }
+            }
+        }
+
+        private static class Node<K, V> {
+            K key;
+            V value;
+            Node<K, V> prev, next;
+
+            Node(K key, V value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
+
+        private static class DoubleLinkedList<K, V> {
+            private Node<K, V> head, tail;
+
+            public void moveNodeToTail(Node<K, V> node) {
+                if (node == null) {
+                    return;
+                }
+                if (node == tail) {
+                    return;
+                }
+                if (node == head) {
+                    head = node.next;
+                    node.next = null;
+                } else {
+                    // ...A ↔ B ↔ C...
+                    node.prev.next = node.next;
+                    node.next.prev = node.prev;
+                    node.next = null;
+                    node.prev = null;
+                }
+                tail.next = node;
+                node.prev = tail;
+                tail = node;
+            }
+
+            public void addNodeToTail(Node<K, V> node) {
+                if (node == null) {
+                    return;
+                }
+                if (head == null) {
+                    // assert tail == null;
+                    head = node;
+                    tail = node;
+                } else {
+                    tail.next = node;
+                    node.prev = tail;
+                    tail = node;
+                }
+            }
+
+            public Node<K, V> removeHead() {
+                if (head == null) {
+                    return null;
+                }
+                Node<K, V> oldHead = this.head;
+                if (head == tail) {
+                    head = null;
+                    tail = null;
+                } else {
+                    // A ↔ B ↔ C...
+                    head = oldHead.next;
+                    head.prev = null;
+                    oldHead.next = null;
+                }
+                return oldHead;
+            }
         }
     }
 
