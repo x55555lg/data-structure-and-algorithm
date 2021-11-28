@@ -2,6 +2,7 @@ package com.lg.leetcode.topinterview.practice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -109,7 +110,115 @@ class CountOfSmallerNumbersAfterSelf {
         return helper;
     }
 
+    private static class MergeSort2 {
+        static int[] count;
+        static int[] index;
+
+        public static List<Integer> calcSmallSum(int[] arr) {
+            if (arr == null || arr.length < 2) {
+                return new ArrayList<>(0);
+            }
+            // count[i]表示i位置右边比我小的个数
+            count = new int[arr.length];
+            index = new int[arr.length];
+            for (int i = 0; i < index.length; i++) {
+                index[i] = i;
+            }
+
+            recurse(arr, 0, arr.length - 1);
+
+            List<Integer> list = new LinkedList<>();
+            for (int i = 0; i < count.length; i++) {
+                list.add(count[i]);
+            }
+            return list;
+        }
+
+        private static void recurse(int[] arr, int left, int right) {
+            if (left == right) {
+                return;
+            }
+            int middle = ((right - left) >> 1) + left;
+            recurse(arr, left, middle);
+            recurse(arr, middle + 1, right);
+            merge(arr, left, right, middle);
+        }
+
+        private static void merge(int[] arr, int left, int right, int middle) {
+            if (left == right) {
+                return;
+            }
+            int[] helper = new int[right - left + 1];
+            int idx = 0;
+            int leftIdx = left;
+            int rightIdx = middle + 1;
+            while (leftIdx <= middle && rightIdx <= right) {
+                if (arr[leftIdx] < arr[rightIdx]) {
+                    helper[idx++] = arr[leftIdx++];
+                } else {
+                    helper[idx++] = arr[rightIdx++];
+                }
+            }
+            while (leftIdx <= middle) {
+                helper[idx++] = arr[leftIdx++];
+            }
+            while (rightIdx <= right) {
+                helper[idx++] = arr[rightIdx++];
+            }
+            for (int i = 0; i < helper.length; i++) {
+                arr[left + i] = helper[i];
+            }
+        }
+
+        private static void merge2(int[] nums, int left, int right, int middle) {
+            int[] arr = new int[right - left + 1];
+            for (int i = left; i <= right; i++) {
+                arr[i - left] = nums[i];
+            }
+            int[] temp = new int[right - left + 1];
+            for (int i = left; i <= right; i++) {
+                temp[i - left] = index[i];
+            }
+
+            int p = left;
+            int leftIdx = left;
+            int rightIdx = middle + 1;
+            int cnt = 0;
+            while (leftIdx <= middle && rightIdx <= right) {
+                if (arr[leftIdx - left] > arr[rightIdx - left]) {
+                    cnt++;
+                    index[p] = temp[rightIdx - left];
+                    nums[p] = arr[rightIdx - left];
+                    p++;
+                    rightIdx++;
+                } else {
+                    index[p] = temp[leftIdx - left];
+                    nums[p] = arr[leftIdx - left];
+                    count[index[p]] += cnt;
+                    p++;
+                    leftIdx++;
+                }
+            }
+
+            while (rightIdx <= right) {
+                index[p] = temp[rightIdx - left];
+                nums[p] = arr[rightIdx - left];
+                p++;
+                rightIdx++;
+            }
+
+            while (leftIdx <= middle) {
+                index[p] = temp[leftIdx - left];
+                nums[p] = arr[leftIdx - left];
+                count[index[p]] += cnt;
+                p++;
+                leftIdx++;
+            }
+        }
+    }
+
     public static void main(String[] args) {
+        // TODO 2021/9/16 有问题的
         int[] arr = {5, 2, 6, 1};
         List<Integer> list = bruteForce(arr);
         System.out.println(list);

@@ -56,7 +56,9 @@ class CopyLinkedListWithRandom {
         for (Node node = header; node != null; node = node.next) {
             Node newNode = oldNewMapping.get(node);
             newNode.next = oldNewMapping.get(node.next);
-            newNode.rand = oldNewMapping.get(node.rand);
+            if (newNode.rand != null) {
+                newNode.rand = oldNewMapping.get(node.rand);
+            }
         }
 
         // 获取新链表的头

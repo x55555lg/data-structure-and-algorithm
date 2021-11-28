@@ -54,7 +54,9 @@ class CopyLinkedListWithRandom {
             Node cloneNode = originCloneIndexMap.get(node);
             // 复制节点的next = 原节点的next对应的复制节点
             cloneNode.next = originCloneIndexMap.get(node.next);
-            cloneNode.rand = originCloneIndexMap.get(node.rand);
+            if (cloneNode.rand != null) {
+                cloneNode.rand = originCloneIndexMap.get(node.rand);
+            }
         }
         // 返回头节点
         return originCloneIndexMap.get(header);
